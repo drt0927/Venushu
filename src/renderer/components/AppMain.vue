@@ -1,12 +1,11 @@
 <template>
-  <div>
-      index
-  </div>
+  <b-container fluid>
+    <router-view></router-view>
+  </b-container>
 </template>
 
 <script>
 export default {
-
 }
 </script>
 
