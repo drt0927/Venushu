@@ -1,6 +1,6 @@
 <template>
   <b-navbar toggleable="lg" type="dark" variant="warning">
-    <b-navbar-brand to="#/dashboard">
+    <b-navbar-brand to="/dashboard">
       <!-- <img src="~@/assets/shiba.png" style="height: 56px;"/> -->
       Venushu
     </b-navbar-brand>
@@ -9,8 +9,8 @@
 
     <b-collapse id="nav-collapse" is-nav>
       <b-navbar-nav>
-        <b-nav-item to="#/customer">고객관리</b-nav-item>
-        <b-nav-item to="#/order">주문장관리</b-nav-item>
+        <b-nav-item to="/customer">고객관리</b-nav-item>
+        <b-nav-item to="/order">주문장관리</b-nav-item>
       </b-navbar-nav>
 
       <!-- Right aligned nav items -->

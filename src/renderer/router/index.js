@@ -26,14 +26,9 @@ export default new Router({
               component: require('@/views/Customer/Index').default
             },
             {
-              path: 'detail',
+              path: 'detail/:id',
               name: 'customer-detail',
               component: require('@/views/Customer/Detail').default
-            },
-            {
-              path: 'write',
-              name: 'customer-write',
-              component: require('@/views/Customer/Write').default
             }
           ]
         },
@@ -48,14 +43,9 @@ export default new Router({
               component: require('@/views/Order/Index').default
             },
             {
-              path: 'detail',
+              path: 'detail/:id',
               name: 'order-detail',
               component: require('@/views/Order/Detail').default
-            },
-            {
-              path: 'write',
-              name: 'order-write',
-              component: require('@/views/Order/Write').default
             }
           ]
         }

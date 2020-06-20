@@ -7,7 +7,11 @@
 
 <script>
 export default {
-
+  mounted () {
+    this.$db.customerDatastore.find({ _id: this.$route.params.id }, (err, row) => {
+      console.log(err, row)
+    })
+  }
 }
 </script>
 

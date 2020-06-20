@@ -11,13 +11,12 @@
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
-import { Navbar, AppMain } from '../components'
+import Navbar from '../components/Navbar'
 
 export default {
   name: 'default-layout',
   components: {
-    Navbar,
-    AppMain
+    Navbar
   }
 }
 </script>

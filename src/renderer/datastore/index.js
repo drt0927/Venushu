@@ -1,0 +1,6 @@
+export { default as boardDatastore } from './boardDatastore'
+export { default as customerDatastore } from './customerDatastore'
+export { default as orderDatastore } from './orderDatastore'
+export { default as scheduleDatastore } from './scheduleDatastore'
+export { default as storeDatastore } from './storeDatastore'
+export { default as userDatastore } from './userDatastore'
