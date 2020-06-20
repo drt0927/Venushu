@@ -9,6 +9,7 @@ import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
 import crypto from './utils/Crypto'
 import common from './utils/Common'
 import VueDaumPostcode from 'vue-daum-postcode'
+import moment from 'moment'
 
 if (!process.env.IS_WEB) Vue.use(require('vue-electron'))
 Vue.http = Vue.prototype.$http = axios
@@ -24,6 +25,8 @@ Vue.prototype.$db = {
   'storeDatastore': storeDatastore,
   'userDatastore': userDatastore
 }
+moment.locale('ko')
+Vue.prototype.$moment = moment
 
 Vue.use(BootstrapVue)
 Vue.use(IconsPlugin)

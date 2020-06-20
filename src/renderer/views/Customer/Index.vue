@@ -11,7 +11,7 @@
           <b-col cols="3"><b-input v-model="search.address" @keyup.enter="tableReload"></b-input></b-col>
         </b-row>
         <b-row>
-          <b-col cols="1">알림여부</b-col>
+          <b-col cols="1">행사알림</b-col>
           <b-col cols="3">
             <b-select v-model="search.isNotify" @keyup.enter="tableReload">
               <b-select-option :value="null">전체</b-select-option>
@@ -45,7 +45,7 @@
         </template>
 
         <template v-slot:cell(phone)="data">
-          {{ $common.phone($crypto.decrypt(data.value)) }}
+          {{ $common.masking.phone($crypto.decrypt(data.value)) }}
         </template>
 
         <template v-slot:cell(isNotify)="data">
@@ -67,61 +67,57 @@
       body-text-variant="dark"
       footer-bg-variant="warning"
       footer-text-variant="dark">
-      <b-row>
-        <b-col>
-          <b-container fluid>
-            <b-row class="mb-1">
-              <b-col cols="3">이름</b-col>
-              <b-col><b-input ref="name" v-model="form.name" @keyup.enter="writeCustomer"></b-input></b-col>
-            </b-row>
-            <b-row class="mb-1">
-              <b-col cols="3">연락처</b-col>
-              <b-col><b-input ref="phone" v-model="form.phone" @keyup.enter="writeCustomer"></b-input></b-col>
-            </b-row>
-            <b-row class="mb-1">
-              <b-col cols="3">주소(1)</b-col>
-              <b-col>
-                <b-input-group>
-                  <b-input v-model="form.address1" @keyup.enter="writeCustomer"></b-input>
-                  <b-input-group-append>
-                    <b-button variant="outline-success" @click="addrSearch('address1')">주소검색</b-button>
-                  </b-input-group-append>
-                </b-input-group>
-              </b-col>
-            </b-row>
-            <b-row class="mb-1">
-              <b-col cols="3">주소(2)</b-col>
-              <b-col>
-                <b-input-group>
-                  <b-input v-model="form.address2" @keyup.enter="writeCustomer"></b-input>
-                  <b-input-group-append>
-                    <b-button variant="outline-success" @click="addrSearch('address2')">주소검색</b-button>
-                  </b-input-group-append>
-                </b-input-group>
-              </b-col>
-            </b-row>
-            <b-row class="mb-1">
-              <b-col cols="3">주소(3)</b-col>
-              <b-col>
-                <b-input-group>
-                  <b-input v-model="form.address3" @keyup.enter="writeCustomer"></b-input>
-                  <b-input-group-append>
-                    <b-button variant="outline-success" @click="addrSearch('address3')">주소검색</b-button>
-                  </b-input-group-append>
-                </b-input-group>
-              </b-col>
-            </b-row>
-            <b-row class="mb-1">
-              <b-col cols="3">행사알림</b-col>
-              <b-col><b-check type="checkbox" v-model="form.isNotify" @keyup.enter="writeCustomer"></b-check></b-col>
-            </b-row>
-            <b-row class="mb-1">
-              <b-col cols="3">설명</b-col>
-              <b-col><b-input v-model="form.description" @keyup.enter="writeCustomer"></b-input></b-col>
-            </b-row>
-          </b-container>
-        </b-col>
-      </b-row>
+      <b-container fluid>
+        <b-row class="mb-1">
+          <b-col cols="3">이름</b-col>
+          <b-col><b-input ref="name" v-model="form.name" @keyup.enter="writeCustomer"></b-input></b-col>
+        </b-row>
+        <b-row class="mb-1">
+          <b-col cols="3">연락처</b-col>
+          <b-col><b-input ref="phone" v-model="form.phone" @keyup.enter="writeCustomer"></b-input></b-col>
+        </b-row>
+        <b-row class="mb-1">
+          <b-col cols="3">주소(1)</b-col>
+          <b-col>
+            <b-input-group>
+              <b-input v-model="form.address1" @keyup.enter="writeCustomer"></b-input>
+              <b-input-group-append>
+                <b-button variant="outline-success" @click="addrSearch('address1')">주소검색</b-button>
+              </b-input-group-append>
+            </b-input-group>
+          </b-col>
+        </b-row>
+        <b-row class="mb-1">
+          <b-col cols="3">주소(2)</b-col>
+          <b-col>
+            <b-input-group>
+              <b-input v-model="form.address2" @keyup.enter="writeCustomer"></b-input>
+              <b-input-group-append>
+                <b-button variant="outline-success" @click="addrSearch('address2')">주소검색</b-button>
+              </b-input-group-append>
+            </b-input-group>
+          </b-col>
+        </b-row>
+        <b-row class="mb-1">
+          <b-col cols="3">주소(3)</b-col>
+          <b-col>
+            <b-input-group>
+              <b-input v-model="form.address3" @keyup.enter="writeCustomer"></b-input>
+              <b-input-group-append>
+                <b-button variant="outline-success" @click="addrSearch('address3')">주소검색</b-button>
+              </b-input-group-append>
+            </b-input-group>
+          </b-col>
+        </b-row>
+        <b-row class="mb-1">
+          <b-col cols="3">행사알림</b-col>
+          <b-col><b-check type="checkbox" v-model="form.isNotify" @keyup.enter="writeCustomer"></b-check></b-col>
+        </b-row>
+        <b-row class="mb-1">
+          <b-col cols="3">설명</b-col>
+          <b-col><b-input v-model="form.description" @keyup.enter="writeCustomer"></b-input></b-col>
+        </b-row>
+      </b-container>
       <template v-slot:modal-footer="{ ok, cancel }">
         <b-button variant="success" @click="ok()">
           등록
@@ -173,16 +169,17 @@ export default {
         totalRows: 0,
         isBusy: false
       },
-      selectedAddressId: null
+      selectedAddressId: ''
     }
   },
   methods: {
-    addrSearchClose () {
-      this.$refs['daum-area'].style.display = 'none'
-    },
     addrSearch (id) {
       this.selectedAddressId = id
       this.$refs['daum-area'].style.display = 'block'
+    },
+    addrSearchClose () {
+      this.selectedAddressId = ''
+      this.$refs['daum-area'].style.display = 'none'
     },
     addrSearchComplete (addr) {
       let resultAddr = addr.roadAddress
@@ -196,7 +193,7 @@ export default {
       this.$root.$emit('bv::refresh::table', 'customer-table')
     },
     writeCustomer (modalEvt) {
-      let vm = this
+      const vm = this
       if (!vm.checkValidation()) {
         modalEvt.preventDefault()
         return
@@ -226,13 +223,15 @@ export default {
       this.form.address1 = ''
       this.form.address2 = ''
       this.form.address3 = ''
+      this.form.isNotify = false
+      this.form.description = ''
     },
     modalShown () {
       this.$refs.name.$el.focus()
       this.clearCustomerForm()
     },
     readCustomer () {
-      let vm = this
+      const vm = this
       let query = {}
       vm.pagination.isBusy = true
 
@@ -252,7 +251,7 @@ export default {
       if (vm.search.isNotify) {
         query.isNotify = vm.search.isNotify === '1'
       }
-      console.log(query)
+
       return new Promise((resolve, reject) => {
         vm.$db.customerDatastore.count(query, (cntErr, count) => {
           if (cntErr) {
@@ -272,14 +271,13 @@ export default {
                 reject(err)
               }
               vm.pagination.isBusy = false
-              // vm.items = rows
               resolve(rows)
             })
         })
       })
     },
     checkValidation () {
-      let vm = this
+      const vm = this
       if (!vm.form.name) {
         vm.showMessageBox('필수 항목 누락', '이름을 입력해주세요.')
         vm.$refs.name.$el.focus()
@@ -288,6 +286,12 @@ export default {
 
       if (!vm.form.phone) {
         vm.showMessageBox('필수 항목 누락', '연락처을 입력해주세요.')
+        vm.$refs.phone.$el.focus()
+        return false
+      }
+
+      if (!vm.$common.check.phone(vm.form.phone)) {
+        vm.showMessageBox('필수 항목 오류', '핸드폰 번호 형식이 올바르지 않습니다. 숫자 10~11자리 입니다.')
         vm.$refs.phone.$el.focus()
         return false
       }
@@ -306,35 +310,5 @@ export default {
 </script>
 
 <style>
-.daum-layer-background {
-  display: none;
-  position: fixed;
-  z-index: 9999;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.4);
-  top: 0;
-  left: 0;
-}
 
-.daum-wrapper {
-  z-index: 9999;
-  width: 470px;
-  height: 500px;
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  overflow-y: auto;
-}
-
-.daum-layer-close {
-  position: absolute;
-  top: 0;
-  right: 0;
-  z-index: 10000;
-  color: white;
-  font-size: x-large;
-  cursor: pointer;
-}
 </style>
