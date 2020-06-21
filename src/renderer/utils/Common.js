@@ -56,5 +56,54 @@ export default {
       }
       return true
     }
+  },
+  messageBox: {
+    showMessageBox (vm, title, message) {
+      return new Promise((resolve, reject) => {
+        vm.$bvModal.msgBoxOk(message, {
+          title: title,
+          size: 'sm',
+          buttonSize: 'sm',
+          okVariant: 'success',
+          headerClass: 'p-2 border-bottom-0',
+          footerClass: 'p-2 border-top-0',
+          centered: true
+        })
+          .then((value) => {
+            resolve(value)
+          })
+          .catch((err) => {
+            reject(err)
+          })
+      })
+    },
+    showConfirmBox (vm, title, message, okText, cancelText, okColor) {
+      return new Promise((resolve, reject) => {
+        vm.$bvModal.msgBoxConfirm(message, {
+          title: title,
+          size: 'sm',
+          buttonSize: 'sm',
+          okVariant: okColor,
+          okTitle: okText,
+          cancelTitle: cancelText,
+          footerClass: 'p-2',
+          hideHeaderClose: false,
+          centered: true
+        })
+          .then(value => {
+            resolve(value)
+          })
+          .catch(err => {
+            reject(err)
+          })
+      })
+    },
+    showToast (vm, title, message, color) {
+      vm.$bvToast.toast(message, {
+        title: title,
+        variant: color || 'danger',
+        solid: true
+      })
+    }
   }
 }

@@ -4,12 +4,13 @@ import axios from 'axios'
 import App from './App'
 import router from './router'
 import store from './store'
-import { boardDatastore, customerDatastore, orderDatastore, scheduleDatastore, storeDatastore, userDatastore } from './datastore'
+import { boardDatastore, customerDatastore, orderDatastore, scheduleDatastore, storeDatastore, userDatastore, localDatastore } from './datastore'
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
 import crypto from './utils/Crypto'
 import common from './utils/Common'
 import VueDaumPostcode from 'vue-daum-postcode'
 import moment from 'moment'
+import EventBus from './utils/EventBus'
 
 if (!process.env.IS_WEB) Vue.use(require('vue-electron'))
 Vue.http = Vue.prototype.$http = axios
@@ -23,10 +24,19 @@ Vue.prototype.$db = {
   'orderDatastore': orderDatastore,
   'scheduleDatastore': scheduleDatastore,
   'storeDatastore': storeDatastore,
-  'userDatastore': userDatastore
+  'userDatastore': userDatastore,
+  'localDatastore': localDatastore
 }
 moment.locale('ko')
 Vue.prototype.$moment = moment
+Vue.prototype.$user = {
+  isLogin: false,
+  idx: '',
+  id: '',
+  name: '',
+  storeName: ''
+}
+Vue.prototype.$bus = EventBus
 
 Vue.use(BootstrapVue)
 Vue.use(IconsPlugin)

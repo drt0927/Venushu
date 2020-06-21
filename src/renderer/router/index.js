@@ -16,6 +16,38 @@ export default new Router({
           component: require('@/views/Dashboard').default
         },
         {
+          path: '/user',
+          name: 'user',
+          component: require('@/views/User/User').default,
+          children: [
+            {
+              path: '',
+              name: 'user-list',
+              component: require('@/views/User/Index').default
+            },
+            {
+              path: 'login',
+              name: 'user-login',
+              component: require('@/views/User/Login').default
+            },
+            {
+              path: 'firstwrite',
+              name: 'user-firstwrite',
+              component: require('@/views/User/FirstWrite').default
+            },
+            {
+              path: 'write',
+              name: 'user-write',
+              component: require('@/views/User/Write').default
+            },
+            {
+              path: 'detail/:id',
+              name: 'user-detail',
+              component: require('@/views/User/Detail').default
+            }
+          ]
+        },
+        {
           path: '/customer',
           name: 'customer',
           component: require('@/views/Customer/Customer').default,
@@ -46,6 +78,35 @@ export default new Router({
               path: 'detail/:id',
               name: 'order-detail',
               component: require('@/views/Order/Detail').default
+            }
+          ]
+        },
+        {
+          path: '/board',
+          name: 'board',
+          component: require('@/views/Board/Board').default,
+          children: [
+            {
+              path: ':type',
+              name: 'board-list',
+              component: require('@/views/Board/Index').default
+            },
+            {
+              path: 'detail/:id',
+              name: 'board-detail',
+              component: require('@/views/Board/Detail').default
+            }
+          ]
+        },
+        {
+          path: '/schedule',
+          name: 'schedule',
+          component: require('@/views/Schedule/Schedule').default,
+          children: [
+            {
+              path: '',
+              name: 'schedule-list',
+              component: require('@/views/Schedule/Index').default
             }
           ]
         }

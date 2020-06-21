@@ -60,6 +60,11 @@
         <b-button variant="danger" @click="deleteCustomer">삭제</b-button>
       </b-col>
     </b-row>
+    <b-row>
+      <b-col>
+        <order-list-by-customer-id :customer-id="$route.params.id"></order-list-by-customer-id>
+      </b-col>
+    </b-row>
     <div ref="daum-area" class="daum-layer-background">
       <div class="daum-wrapper">
         <b-icon-x class="daum-layer-close" @click="addrSearchClose"></b-icon-x>
@@ -111,7 +116,7 @@
           <b-col><b-input ref="change-password" type="password" @keyup.enter="changePhone"></b-input></b-col>
         </b-row>
       </b-container>
-      <template v-slot:modal-footer="{ ok, cancel }">
+      <template v-slot:modal-footer="{ cancel }">
         <b-button variant="success" @click="changePhone">
           변경
         </b-button>
@@ -124,6 +129,7 @@
 </template>
 
 <script>
+import OrderListByCustomerId from '../../components/OrderListByCustomerId'
 export default {
   data () {
     return {
@@ -132,6 +138,12 @@ export default {
       selectedAddressId: '',
       nonMaskingPhone: ''
     }
+  },
+  components: {
+    'order-list-by-customer-id': OrderListByCustomerId
+  },
+  created () {
+    this.$bus.$emit('SET_MENU_NAVIGATE', [{ text: '고객 관리', to: { path: '/customer' } }, { text: '상세' }])
   },
   computed: {
     phone () {
@@ -168,19 +180,19 @@ export default {
       this.addrSearchClose()
     },
     goIndex () {
-      location.href = '#/customer'
+      this.$router.push({ path: '/customer' })
     },
     deleteCustomer () {
       const vm = this
-      vm.showConfirmBox('확인', '정말로 삭제하시겠습니까?')
+      vm.$common.messageBox.showConfirmBox(vm, '확인', '정말로 삭제하시겠습니까?', '삭제', '취소', 'danger')
         .then((value) => {
           if (value) {
             vm.$db.customerDatastore.remove({ _id: vm.$route.params.id }, {}, function (err, numRemoved) {
               if (err) {
-                vm.showMessageBox('오류', '삭제에 실패 하였습니다. 오류 : ' + err)
+                vm.$common.messageBox.showMessageBox(vm, '오류', '삭제에 실패 하였습니다. 오류 : ' + err)
                 return
               }
-              vm.showMessageBox('성공', '사용자 정보가 삭제되었습니다.').then((value) => {
+              vm.$common.messageBox.showMessageBox(vm, '성공', '사용자 정보가 삭제되었습니다.').then((value) => {
                 vm.goIndex()
               })
             })
@@ -191,59 +203,18 @@ export default {
       const vm = this
       vm.$db.customerDatastore.update({ _id: vm.$route.params.id }, { $set: vm.customer }, {}, function (err, a) {
         if (err) {
-          vm.showMessageBox('오류', '수정에 실패 하였습니다. 오류 : ' + err)
+          vm.$common.messageBox.showMessageBox(vm, '오류', '수정에 실패 하였습니다. 오류 : ' + err)
           return
         }
-        vm.showMessageBox('성공', '사용자 정보가 수정되었습니다.').then((value) => {
-          location.reload()
+        vm.$common.messageBox.showMessageBox(vm, '성공', '사용자 정보가 수정되었습니다.').then((value) => {
         })
-      })
-    },
-    showMessageBox (title, message) {
-      return new Promise((resolve, reject) => {
-        this.$bvModal.msgBoxOk(message, {
-          title: title,
-          size: 'sm',
-          buttonSize: 'sm',
-          okVariant: 'success',
-          headerClass: 'p-2 border-bottom-0',
-          footerClass: 'p-2 border-top-0',
-          centered: true
-        })
-          .then((value) => {
-            resolve(value)
-          })
-          .catch((err) => {
-            reject(err)
-          })
-      })
-    },
-    showConfirmBox (title, message) {
-      return new Promise((resolve, reject) => {
-        this.$bvModal.msgBoxConfirm(message, {
-          title: title,
-          size: 'sm',
-          buttonSize: 'sm',
-          okVariant: 'danger',
-          okTitle: '삭제',
-          cancelTitle: '취소',
-          footerClass: 'p-2',
-          hideHeaderClose: false,
-          centered: true
-        })
-          .then(value => {
-            resolve(value)
-          })
-          .catch(err => {
-            reject(err)
-          })
       })
     },
     openPhone () {
       if (this.$refs['open-password'].$el.value === '1234') {
         this.nonMaskingPhone = this.$crypto.decrypt(this.customer.phone)
       } else {
-        this.showMessageBox('오류', '비밀번호가 일치하지 않습니다.')
+        this.$common.messageBox.showMessageBox(this, '오류', '비밀번호가 일치하지 않습니다.')
       }
     },
     openPhoneModalShown () {
@@ -256,7 +227,7 @@ export default {
       const vm = this
       if (vm.$refs['change-password'].$el.value === '1234') {
         if (!vm.newPhone) {
-          vm.showMessageBox('필수 항목 누락', '새로운 연락처을 입력해주세요.')
+          vm.$common.messageBox.showMessageBox(vm, '필수 항목 누락', '새로운 연락처을 입력해주세요.')
             .then(() => {
               vm.$refs['new-phone'].$el.focus()
             })
@@ -264,7 +235,7 @@ export default {
         }
 
         if (!vm.$common.check.phone(vm.newPhone)) {
-          vm.showMessageBox('필수 항목 오류', '핸드폰 번호 형식이 올바르지 않습니다. 숫자 10~11자리 입니다.')
+          vm.$common.messageBox.showMessageBox(vm, '필수 항목 오류', '핸드폰 번호 형식이 올바르지 않습니다. 숫자 10~11자리 입니다.')
             .then(() => {
               vm.$refs['new-phone'].$el.focus()
             })
@@ -273,15 +244,16 @@ export default {
 
         vm.$db.customerDatastore.update({ _id: vm.$route.params.id }, { $set: { phone: vm.$crypto.encrypt(vm.newPhone) } }, {}, function (err, a) {
           if (err) {
-            vm.showMessageBox('오류', '수정에 실패 하였습니다. 오류 : ' + err)
+            vm.$common.messageBox.showMessageBox(vm, '오류', '수정에 실패 하였습니다. 오류 : ' + err)
             return
           }
-          vm.showMessageBox('성공', '연락처가 수정되었습니다.').then((value) => {
-            location.reload()
+          vm.$common.messageBox.showMessageBox(vm, '성공', '연락처가 수정되었습니다.').then((value) => {
+            vm.customer.phone = vm.$crypto.encrypt(vm.newPhone)
+            vm.$bvModal.hide('modal-update-phone')
           })
         })
       } else {
-        vm.showMessageBox('오류', '비밀번호가 일치하지 않습니다.')
+        vm.$common.messageBox.showMessageBox(vm, '오류', '비밀번호가 일치하지 않습니다.')
       }
     },
     changePhoneModalShown () {

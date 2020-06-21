@@ -1,11 +1,10 @@
 <template>
-  <b-container fluid>
-    <router-view></router-view>
-  </b-container>
+  <div>user detail</div>
 </template>
 
 <script>
 export default {
+
 }
 </script>
 
