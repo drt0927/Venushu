@@ -5,7 +5,6 @@
         <p>고객, 거래처, 스케쥴, 주문장, 네이버 배송, 수평이동 관리 및 공지사항 기능을 제공합니다.</p>
         <p><b>무단 배포 환영!!</b> 단, <b>매니저 승인 후</b> 배포 가능합니다.</p>
         <p>프로그램 처음 실행 후 <b>관리자 계정 및 기본 설정</b>을 만들기 위한 단계 입니다.</p>
-        <p>Copyright(C) 2020. filbert. All rights reserved.</p>
       </b-jumbotron>
     </b-container>
     <b-container fluid>

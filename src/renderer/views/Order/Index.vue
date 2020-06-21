@@ -204,7 +204,7 @@ export default {
         description: vm.form.description,
         createDate: new Date()
       },
-      function (err) {
+      (err) => {
         if (!err) {
           vm.tableReload()
         }
