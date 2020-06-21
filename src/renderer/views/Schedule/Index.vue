@@ -54,10 +54,13 @@
         </b-row>
       </b-container>
       <template v-slot:modal-footer="{ ok, cancel }">
+        <b-button v-show="form._id" variant="danger" @click="deleteSchedule">
+          삭제
+        </b-button>
         <b-button variant="success" @click="ok()">
           {{ okButtonText }}
         </b-button>
-        <b-button variant="danger" @click="cancel()">
+        <b-button variant="secondary" @click="cancel()">
           취소
         </b-button>
       </template>
@@ -73,7 +76,7 @@ import interactionPlugin from '@fullcalendar/interaction'
 
 export default {
   components: {
-    FullCalendar // make the <FullCalendar> tag available
+    FullCalendar
   },
   data () {
     return {
@@ -86,24 +89,8 @@ export default {
         _id: '',
         backgroundColor: '',
         borderColor: '',
-        textColor: '',
-        allDay: true
+        textColor: ''
       }
-      // ,
-      // option: {
-      //   className: '',
-      //   editable: '',
-      //   startEditable: '',
-      //   durationEditable: '',
-      //   resourceEditable: '',
-      //   overlap: '',
-      //   constraint: '',
-      //   allow: '',
-      //   allDayDefault: '',
-      //   success: '',
-      //   failure: '',
-      //   eventDataTransform: ''
-      // }
     }
   },
   created () {
@@ -199,10 +186,27 @@ export default {
               reject(err)
               return
             }
-            console.log(err, rows)
             resolve(rows)
           })
       })
+    },
+    deleteSchedule () {
+      const vm = this
+      vm.$common.messageBox.showConfirmBox(vm, '확인', '정말로 삭제하시겠습니까?', '삭제', '취소', 'danger')
+        .then((value) => {
+          if (value) {
+            vm.$db.scheduleDatastore.remove({ _id: vm.form._id }, {}, function (err, numRemoved) {
+              if (err) {
+                vm.$common.messageBox.showMessageBox(vm, '오류', '삭제에 실패 하였습니다. 오류 : ' + err)
+                return
+              }
+              vm.$common.messageBox.showMessageBox(vm, '성공', '사용자 정보가 삭제되었습니다.').then((value) => {
+                vm.calendarReload()
+                vm.$bvModal.hide('modal-add-schedule')
+              })
+            })
+          }
+        })
     },
     writeSchedule (modalEvt) {
       const vm = this
@@ -212,8 +216,6 @@ export default {
       }
 
       if (vm.form._id) {
-        // vm.form.start = vm.$moment(vm.form.start)._d
-        // vm.form.end = vm.$moment(vm.form.end)._d
         vm.form.start = new Date(vm.form.start)
         vm.form.end = new Date(vm.form.end)
         vm.$db.scheduleDatastore.update({ _id: vm.form._id }, { $set: vm.form }, {}, function (err, a) {
@@ -231,15 +233,13 @@ export default {
           backgroundColor: vm.form.backgroundColor,
           borderColor: vm.form.borderColor,
           textColor: vm.form.textColor,
-          // start: vm.$moment(vm.form.start)._d,
-          // end: vm.$moment(vm.form.end)._d,
           start: new Date(vm.form.start),
           end: new Date(vm.form.end),
           createDate: new Date()
         },
         (err) => {
-          if (!err) {
-            console.log(err)
+          if (err) {
+            vm.$common.messageBox.showMessageBox(vm, '오류', '수정에 실패 하였습니다. 오류 : ' + err)
           }
           vm.calendarReload()
           vm.$bvModal.hide('modal-add-schedule')

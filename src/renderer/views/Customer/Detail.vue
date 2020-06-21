@@ -211,11 +211,21 @@ export default {
       })
     },
     openPhone () {
-      if (this.$refs['open-password'].$el.value === '1234') {
-        this.nonMaskingPhone = this.$crypto.decrypt(this.customer.phone)
-      } else {
-        this.$common.messageBox.showMessageBox(this, '오류', '비밀번호가 일치하지 않습니다.')
-      }
+      const vm = this
+      vm.$crypto.encryptSHA(vm.$refs['open-password'].$el.value)
+        .then((key) => {
+          vm.$db.userDatastore.find({ id: vm.$user.id, password: key })
+            .exec((err, row) => {
+              if (!err && row.length > 0) {
+                vm.nonMaskingPhone = vm.$crypto.decrypt(vm.customer.phone)
+              } else {
+                vm.$common.messageBox.showMessageBox(vm, '오류', '비밀번호가 일치하지 않습니다.')
+              }
+            })
+        })
+        .catch((err) => {
+          console.log(err)
+        })
     },
     openPhoneModalShown () {
       this.nonMaskingPhone = this.$common.masking.phone(this.$crypto.decrypt(this.customer.phone))
@@ -225,36 +235,46 @@ export default {
     },
     changePhone () {
       const vm = this
-      if (vm.$refs['change-password'].$el.value === '1234') {
-        if (!vm.newPhone) {
-          vm.$common.messageBox.showMessageBox(vm, '필수 항목 누락', '새로운 연락처을 입력해주세요.')
-            .then(() => {
-              vm.$refs['new-phone'].$el.focus()
-            })
-          return
-        }
 
-        if (!vm.$common.check.phone(vm.newPhone)) {
-          vm.$common.messageBox.showMessageBox(vm, '필수 항목 오류', '핸드폰 번호 형식이 올바르지 않습니다. 숫자 10~11자리 입니다.')
-            .then(() => {
-              vm.$refs['new-phone'].$el.focus()
-            })
-          return
-        }
-
-        vm.$db.customerDatastore.update({ _id: vm.$route.params.id }, { $set: { phone: vm.$crypto.encrypt(vm.newPhone) } }, {}, function (err, a) {
-          if (err) {
-            vm.$common.messageBox.showMessageBox(vm, '오류', '수정에 실패 하였습니다. 오류 : ' + err)
-            return
-          }
-          vm.$common.messageBox.showMessageBox(vm, '성공', '연락처가 수정되었습니다.').then((value) => {
-            vm.customer.phone = vm.$crypto.encrypt(vm.newPhone)
-            vm.$bvModal.hide('modal-update-phone')
+      if (!vm.newPhone) {
+        vm.$common.messageBox.showMessageBox(vm, '필수 항목 누락', '새로운 연락처을 입력해주세요.')
+          .then(() => {
+            vm.$refs['new-phone'].$el.focus()
           })
-        })
-      } else {
-        vm.$common.messageBox.showMessageBox(vm, '오류', '비밀번호가 일치하지 않습니다.')
+        return
       }
+
+      if (!vm.$common.check.phone(vm.newPhone)) {
+        vm.$common.messageBox.showMessageBox(vm, '필수 항목 오류', '핸드폰 번호 형식이 올바르지 않습니다. 숫자 10~11자리 입니다.')
+          .then(() => {
+            vm.$refs['new-phone'].$el.focus()
+          })
+        return
+      }
+
+      vm.$crypto.encryptSHA(this.$refs['change-password'].$el.value)
+        .then((key) => {
+          vm.$db.userDatastore.find({ id: vm.$user.id, password: key })
+            .exec((err, row) => {
+              if (!err && row.length > 0) {
+                vm.$db.customerDatastore.update({ _id: vm.$route.params.id }, { $set: { phone: vm.$crypto.encrypt(vm.newPhone) } }, {}, function (err, a) {
+                  if (err) {
+                    vm.$common.messageBox.showMessageBox(vm, '오류', '수정에 실패 하였습니다. 오류 : ' + err)
+                    return
+                  }
+                  vm.$common.messageBox.showMessageBox(vm, '성공', '연락처가 수정되었습니다.').then((value) => {
+                    vm.customer.phone = vm.$crypto.encrypt(vm.newPhone)
+                    vm.$bvModal.hide('modal-update-phone')
+                  })
+                })
+              } else {
+                vm.$common.messageBox.showMessageBox(vm, '오류', '비밀번호가 일치하지 않습니다.')
+              }
+            })
+        })
+        .catch((err) => {
+          console.log(err)
+        })
     },
     changePhoneModalShown () {
       this.newPhone = ''
