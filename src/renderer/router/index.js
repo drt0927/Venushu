@@ -78,6 +78,11 @@ export default new Router({
               path: 'detail/:id',
               name: 'order-detail',
               component: require('@/views/Order/Detail').default
+            },
+            {
+              path: 'write',
+              name: 'order-write',
+              component: require('@/views/Order/Write').default
             }
           ]
         },

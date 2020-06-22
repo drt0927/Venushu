@@ -105,5 +105,11 @@ export default {
         solid: true
       })
     }
+  },
+  enum: {
+    boardType: {
+      notice: '공지사항',
+      comment: '코멘트'
+    }
   }
 }

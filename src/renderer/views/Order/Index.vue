@@ -25,7 +25,8 @@
       <b-container fluid>
         <b-row>
           <b-col cols="auto" class="mr-auto p-1"><span>개수 : {{ pagination.totalRows }} </span></b-col>
-          <b-col cols="auto" class="p-1"><b-button v-b-modal.modal-add-order variant="success">등록</b-button></b-col>
+          <!-- <b-col cols="auto" class="p-1"><b-button v-b-modal.modal-add-order variant="success">등록</b-button></b-col> -->
+          <b-col cols="auto" class="p-1"><b-button to="/order/write" variant="success">등록</b-button></b-col>
         </b-row>
       </b-container>
       <b-table id="order-table" striped sticky-header="500px"
@@ -48,7 +49,7 @@
       ></b-pagination>
     </div>
 
-    <b-modal id="modal-add-order" ref="modal" title="주문장 등록" size="lg"
+    <!-- <b-modal id="modal-add-order" ref="modal" title="주문장 등록" size="lg"
       @ok="writeOrder" @shown="modalShown"
       header-bg-variant="dark"
       header-text-variant="light"
@@ -112,12 +113,12 @@
         <vue-daum-postcode style="margin-top:25px;" @complete="addrSearchComplete" />
       </div>
     </div>
-    <customer-search-modal @row-selected="customerSelected"></customer-search-modal>
+    <customer-search-modal @row-selected="customerSelected"></customer-search-modal> -->
   </div>
 </template>
 
 <script>
-import CustomerSearchModal from '../../components/CustomerSearchModal'
+// import CustomerSearchModal from '../../components/CustomerSearchModal'
 
 export default {
   data () {
@@ -131,16 +132,16 @@ export default {
         { key: 'address', label: '주소' },
         { key: 'action', label: '상세' }
       ],
-      form: {
-        name: '',
-        customerId: '',
-        productCode: '',
-        size: '',
-        count: 0,
-        amt: 0,
-        address: '',
-        description: ''
-      },
+      // form: {
+      //   name: '',
+      //   customerId: '',
+      //   productCode: '',
+      //   size: '',
+      //   count: 0,
+      //   amt: 0,
+      //   address: '',
+      //   description: ''
+      // },
       search: {
         name: '',
         address: '',
@@ -158,74 +159,74 @@ export default {
   created () {
     this.$bus.$emit('SET_MENU_NAVIGATE', [{ text: '주문장 관리', to: { path: '/order' } }])
   },
-  components: {
-    'customer-search-modal': CustomerSearchModal
-  },
+  // components: {
+  //   'customer-search-modal': CustomerSearchModal
+  // },
   methods: {
-    customerSelected (item) {
-      this.form.name = item.name
-      this.form.customerId = item._id
-    },
-    customerSearch () {
-      this.$bvModal.show('modal-search-customer')
-    },
-    addrSearch () {
-      this.$refs['daum-area'].style.display = 'block'
-    },
-    addrSearchClose () {
-      this.$refs['daum-area'].style.display = 'none'
-    },
-    addrSearchComplete (addr) {
-      let resultAddr = addr.roadAddress
-      if (addr.buildingName) {
-        resultAddr += ` (${addr.buildingName})`
-      }
-      this.form.address = resultAddr
-      this.addrSearchClose()
-      this.$refs.address.$el.focus()
-    },
+    // customerSelected (item) {
+    //   this.form.name = item.name
+    //   this.form.customerId = item._id
+    // },
+    // customerSearch () {
+    //   this.$bvModal.show('modal-search-customer')
+    // },
+    // addrSearch () {
+    //   this.$refs['daum-area'].style.display = 'block'
+    // },
+    // addrSearchClose () {
+    //   this.$refs['daum-area'].style.display = 'none'
+    // },
+    // addrSearchComplete (addr) {
+    //   let resultAddr = addr.roadAddress
+    //   if (addr.buildingName) {
+    //     resultAddr += ` (${addr.buildingName})`
+    //   }
+    //   this.form.address = resultAddr
+    //   this.addrSearchClose()
+    //   this.$refs.address.$el.focus()
+    // },
     tableReload () {
       this.$root.$emit('bv::refresh::table', 'order-table')
     },
-    writeOrder (modalEvt) {
-      const vm = this
-      if (!vm.checkValidation()) {
-        modalEvt.preventDefault()
-        return
-      }
-      vm.$db.orderDatastore.insert({
-        name: vm.form.name,
-        customerId: vm.form.customerId,
-        productCode: vm.form.productCode,
-        size: vm.form.size,
-        count: vm.form.count,
-        amt: vm.form.amt,
-        address: vm.form.address,
-        description: vm.form.description,
-        createDate: new Date()
-      },
-      (err) => {
-        if (!err) {
-          vm.tableReload()
-        }
-        vm.clearOrderForm()
-        vm.$bvModal.hide('modal-add-order')
-      })
-    },
-    clearOrderForm () {
-      this.form.name = ''
-      this.form.customerId = ''
-      this.form.productCode = ''
-      this.form.size = ''
-      this.form.count = 0
-      this.form.amt = 0
-      this.form.address = ''
-      this.form.description = ''
-    },
-    modalShown () {
-      this.$refs.name.$el.focus()
-      this.clearOrderForm()
-    },
+    // writeOrder (modalEvt) {
+    //   const vm = this
+    //   if (!vm.checkValidation()) {
+    //     modalEvt.preventDefault()
+    //     return
+    //   }
+    //   vm.$db.orderDatastore.insert({
+    //     name: vm.form.name,
+    //     customerId: vm.form.customerId,
+    //     productCode: vm.form.productCode,
+    //     size: vm.form.size,
+    //     count: vm.form.count,
+    //     amt: vm.form.amt,
+    //     address: vm.form.address,
+    //     description: vm.form.description,
+    //     createDate: new Date()
+    //   },
+    //   (err) => {
+    //     if (!err) {
+    //       vm.tableReload()
+    //     }
+    //     vm.clearOrderForm()
+    //     vm.$bvModal.hide('modal-add-order')
+    //   })
+    // },
+    // clearOrderForm () {
+    //   this.form.name = ''
+    //   this.form.customerId = ''
+    //   this.form.productCode = ''
+    //   this.form.size = ''
+    //   this.form.count = 0
+    //   this.form.amt = 0
+    //   this.form.address = ''
+    //   this.form.description = ''
+    // },
+    // modalShown () {
+    //   this.$refs.name.$el.focus()
+    //   this.clearOrderForm()
+    // },
     readOrder () {
       const vm = this
       let query = {}
@@ -266,41 +267,41 @@ export default {
             })
         })
       })
-    },
-    checkValidation () {
-      const vm = this
-      if (!vm.form.customerId) {
-        vm.$common.messageBox.showToast(vm, '필수 항목 누락', '주문자를 입력해주세요.')
-        vm.$refs.name.$el.focus()
-        return false
-      }
-
-      if (!vm.form.productCode) {
-        vm.$common.messageBox.showToast(vm, '필수 항목 누락', '품번을 입력해주세요.')
-        vm.$refs.productCode.$el.focus()
-        return false
-      }
-
-      if (!vm.form.size) {
-        vm.$common.messageBox.showToast(vm, '필수 항목 누락', '사이즈를 입력해주세요.')
-        vm.$refs.size.$el.focus()
-        return false
-      }
-
-      if (!vm.form.count) {
-        vm.$common.messageBox.showToast(vm, '필수 항목 누락', '수량을 입력해주세요.')
-        vm.$refs.count.$el.focus()
-        return false
-      }
-
-      if (!vm.form.amt) {
-        vm.$common.messageBox.showToast(vm, '필수 항목 누락', '금액을 입력해주세요.')
-        vm.$refs.amt.$el.focus()
-        return false
-      }
-
-      return true
     }
+    // checkValidation () {
+    //   const vm = this
+    //   if (!vm.form.customerId) {
+    //     vm.$common.messageBox.showToast(vm, '필수 항목 누락', '주문자를 입력해주세요.')
+    //     vm.$refs.name.$el.focus()
+    //     return false
+    //   }
+
+    //   if (!vm.form.productCode) {
+    //     vm.$common.messageBox.showToast(vm, '필수 항목 누락', '품번을 입력해주세요.')
+    //     vm.$refs.productCode.$el.focus()
+    //     return false
+    //   }
+
+    //   if (!vm.form.size) {
+    //     vm.$common.messageBox.showToast(vm, '필수 항목 누락', '사이즈를 입력해주세요.')
+    //     vm.$refs.size.$el.focus()
+    //     return false
+    //   }
+
+    //   if (!vm.form.count) {
+    //     vm.$common.messageBox.showToast(vm, '필수 항목 누락', '수량을 입력해주세요.')
+    //     vm.$refs.count.$el.focus()
+    //     return false
+    //   }
+
+    //   if (!vm.form.amt) {
+    //     vm.$common.messageBox.showToast(vm, '필수 항목 누락', '금액을 입력해주세요.')
+    //     vm.$refs.amt.$el.focus()
+    //     return false
+    //   }
+
+    //   return true
+    // }
   }
 }
 </script>
