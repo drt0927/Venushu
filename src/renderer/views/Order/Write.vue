@@ -25,7 +25,7 @@
             <b-datepicker v-model="form.deliveryEnd" locale="ko"></b-datepicker>
           </b-col>
           <b-col cols="1">송장번호</b-col>
-          <b-col><b-input ref="productCode" v-model="form.productCode" @keyup.enter="writeOrder"></b-input></b-col>
+          <b-col><b-input v-model="form.deliveryCode" @keyup.enter="writeOrder"></b-input></b-col>
         </b-row>
         <b-row class="mb-1">
           <b-col cols="1">주소</b-col>
@@ -71,10 +71,10 @@
         </div>
       </div>
     </b-container>
-    <!-- <b-button variant="success" @click="ok()">
+    <b-button variant="success" @click="writeOrder">
       등록
     </b-button>
-    <b-button variant="danger" @click="cancel()">
+    <!-- <b-button variant="danger" @click="cancel()">
       취소
     </b-button> -->
     <div ref="daum-area" class="daum-layer-background">
@@ -100,6 +100,7 @@ export default {
         deliveryEnd: null,
         address: '',
         description: '',
+        deliveryCode: '',
         products: []
       }
     }
@@ -139,34 +140,41 @@ export default {
         modalEvt.preventDefault()
         return
       }
+
       vm.$db.orderDatastore.insert({
         name: vm.form.name,
         customerId: vm.form.customerId,
-        productCode: vm.form.productCode,
-        size: vm.form.size,
-        count: vm.form.count,
-        amt: vm.form.amt,
+        deliveryStart: vm.form.deliveryStart,
+        deliveryEnd: vm.form.deliveryEnd,
         address: vm.form.address,
         description: vm.form.description,
+        deliveryCode: vm.form.deliveryCode,
+        products: vm.form.products,
         createDate: new Date()
       },
       (err) => {
         if (!err) {
-          vm.tableReload()
+          vm.$common.messageBox.showMessageBox(vm, '성공', '주문장이 생성 되었습니다.').then((value) => {
+            vm.goIndex()
+          })
+          // vm.tableReload()
         }
         vm.clearOrderForm()
         vm.$bvModal.hide('modal-add-order')
       })
     },
+    goIndex () {
+      this.$router.push({ path: '/order' })
+    },
     clearOrderForm () {
-      this.form.name = ''
-      this.form.customerId = ''
-      this.form.productCode = ''
-      this.form.size = ''
-      this.form.count = 0
-      this.form.amt = 0
-      this.form.address = ''
-      this.form.description = ''
+      this.name = ''
+      this.customerId = ''
+      this.deliveryStart = null
+      this.deliveryEnd = null
+      this.address = ''
+      this.description = ''
+      this.deliveryCode = ''
+      this.products = []
     },
     modalShown () {
       this.$refs.name.$el.focus()
@@ -180,29 +188,34 @@ export default {
         return false
       }
 
-      if (!vm.form.productCode) {
-        vm.$common.messageBox.showToast(vm, '필수 항목 누락', '품번을 입력해주세요.')
-        vm.$refs.productCode.$el.focus()
+      if (vm.form.products.length < 1) {
+        vm.$common.messageBox.showToast(vm, '필수 항목 누락', '상품은 하나 이상 등록하셔야 합니다.')
         return false
       }
 
-      if (!vm.form.size) {
-        vm.$common.messageBox.showToast(vm, '필수 항목 누락', '사이즈를 입력해주세요.')
-        vm.$refs.size.$el.focus()
-        return false
-      }
+      // if (!vm.form.productCode) {
+      //   vm.$common.messageBox.showToast(vm, '필수 항목 누락', '품번을 입력해주세요.')
+      //   vm.$refs.productCode.$el.focus()
+      //   return false
+      // }
 
-      if (!vm.form.count) {
-        vm.$common.messageBox.showToast(vm, '필수 항목 누락', '수량을 입력해주세요.')
-        vm.$refs.count.$el.focus()
-        return false
-      }
+      // if (!vm.form.size) {
+      //   vm.$common.messageBox.showToast(vm, '필수 항목 누락', '사이즈를 입력해주세요.')
+      //   vm.$refs.size.$el.focus()
+      //   return false
+      // }
 
-      if (!vm.form.amt) {
-        vm.$common.messageBox.showToast(vm, '필수 항목 누락', '금액을 입력해주세요.')
-        vm.$refs.amt.$el.focus()
-        return false
-      }
+      // if (!vm.form.count) {
+      //   vm.$common.messageBox.showToast(vm, '필수 항목 누락', '수량을 입력해주세요.')
+      //   vm.$refs.count.$el.focus()
+      //   return false
+      // }
+
+      // if (!vm.form.amt) {
+      //   vm.$common.messageBox.showToast(vm, '필수 항목 누락', '금액을 입력해주세요.')
+      //   vm.$refs.amt.$el.focus()
+      //   return false
+      // }
 
       return true
     },
