@@ -3,7 +3,7 @@
     <div>
       <h4>주문장 정보</h4>
       <b-row class="my-2">
-        <b-col>주문자명</b-col>
+        <b-col cols="1">주문자명</b-col>
         <b-col cols="3">
           <b-input-group>
             <b-input ref="name" v-model="order.name" disabled></b-input>
@@ -14,22 +14,8 @@
             </b-input-group-append>
           </b-input-group>
         </b-col>
-        <b-col>품번</b-col>
-        <b-col cols="3"><b-input v-model="order.productCode"></b-input></b-col>
-        <b-col>사이즈</b-col>
-        <b-col cols="3"><b-input v-model="order.size"></b-input></b-col>
-      </b-row>
-      <b-row class="my-2">
-        <b-col>수량</b-col>
-        <b-col cols="3"><b-input v-model="order.count"></b-input></b-col>
-        <b-col>금액(단가)</b-col>
-        <b-col cols="3"><b-input v-model="order.amt"></b-input></b-col>
-        <b-col>합계</b-col>
-        <b-col cols="3"><b-input v-model="totalAmt" disabled></b-input></b-col>
-      </b-row>
-      <b-row class="my-2">
         <b-col cols="1">주소</b-col>
-        <b-col cols="7">
+        <b-col>
           <b-input-group>
             <b-input ref="address" v-model="order.address" @keyup.enter="writeOrder"></b-input>
             <b-input-group-append>
@@ -37,17 +23,26 @@
             </b-input-group-append>
           </b-input-group>
         </b-col>
-        <b-col cols="1">생성일</b-col>
-        <b-col cols="3"><b-input v-model="createDate" disabled></b-input></b-col>
+      </b-row>
+      <b-row class="my-2">
+        <b-col cols="1">출고일</b-col>
+        <b-col><b-datepicker v-model="order.deliveryStart" locale="ko"></b-datepicker></b-col>
+        <b-col cols="1">송장번호</b-col>
+        <b-col><b-input v-model="order.deliveryCode" @keyup.enter="writeOrder"></b-input></b-col>
+        <b-col cols="1">배송 완료</b-col>
+        <b-col><b-datepicker v-model="order.deliveryEnd" locale="ko"></b-datepicker></b-col>
       </b-row>
       <b-row class="my-2">
         <b-col cols="1">설명</b-col>
-        <b-col cols="7"><b-input v-model="order.description"></b-input></b-col>
+        <b-col><b-input v-model="order.description" @keyup.enter="writeOrder"></b-input></b-col>
         <b-col cols="4">
           <b-button variant="primary" @click="updateOrder">수정</b-button>
           <b-button variant="info" @click="goIndex">목록</b-button>
           <b-button variant="danger" @click="deleteOrder">삭제</b-button>
         </b-col>
+      </b-row>
+      <b-row class="my-2">
+        
       </b-row>
     </div>
     <div>

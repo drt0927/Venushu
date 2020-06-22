@@ -56,7 +56,7 @@
         </b-button>
       </template>
     </b-modal>
-    </div>
+  </div>
 </template>
 
 <script>
@@ -66,7 +66,6 @@ export default {
       fields: [
         { key: 'titlelink', label: '제목' },
         { key: 'typeText', label: '게시판' },
-        { key: 'name', label: '작성자' },
         { key: 'createDate', label: '작성일' }
       ],
       form: {

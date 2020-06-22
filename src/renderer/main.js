@@ -4,7 +4,7 @@ import axios from 'axios'
 import App from './App'
 import router from './router'
 import store from './store'
-import { boardDatastore, customerDatastore, orderDatastore, scheduleDatastore, storeDatastore, userDatastore, localDatastore } from './datastore'
+import { boardDatastore, customerDatastore, orderDatastore, scheduleDatastore, storeDatastore, userDatastore, localDatastore, tradeDatastore } from './datastore'
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
 import crypto from './utils/Crypto'
 import common from './utils/Common'
@@ -25,7 +25,8 @@ Vue.prototype.$db = {
   'scheduleDatastore': scheduleDatastore,
   'storeDatastore': storeDatastore,
   'userDatastore': userDatastore,
-  'localDatastore': localDatastore
+  'localDatastore': localDatastore,
+  'tradeDatastore': tradeDatastore
 }
 moment.locale('ko')
 Vue.prototype.$moment = moment

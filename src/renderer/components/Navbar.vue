@@ -11,33 +11,11 @@
       <b-navbar-nav>
         <b-nav-item to="/customer">고객관리</b-nav-item>
         <b-nav-item to="/order">주문장관리</b-nav-item>
-        <b-nav-item disabled>지점관리</b-nav-item>
+        <b-nav-item to="/trade">수평이동</b-nav-item>
+        <b-nav-item to="/store">지점관리</b-nav-item>
         <b-nav-item to="/schedule">일정관리</b-nav-item>
         <b-nav-item to="/board/notice">공지사항</b-nav-item>
-        <b-nav-item disabled>수평이동</b-nav-item>
-        <b-nav-item disabled>네이버배송</b-nav-item>
-        <b-nav-item disabled>계정관리</b-nav-item>
       </b-navbar-nav>
-<!-- 1. 지점별 연락처 등록 / 조회
-    - 지점명, 연락처
-2. 달력 스케쥴 등록 / 조회
-    - 내용, 타입(휴일, 행사 등등), 작성자 ID
-3. 주문장 등록 / 조회
-    - 품번, 사이즈, 금액, 고객ID
-4. 고객 등록 / 조회
-    - 고객명, 연락처, 주소(3개)
-    - 주소 검색
-    - 행사 연락 여부
-    - 특이사항
-5. 공지사항
-    - 제목, 내용, 작성자 ID
-6. 계정 관리
-    - ID, PW
-7. 수평이동
-    - 매장끼리 물물교환
-8. 네이버 배송
-    - 배송날짜, 리딩날짜, 고객명, 품번, 수량, 가격
-    - 서머리 -->
       <!-- Right aligned nav items -->
       <b-navbar-nav class="ml-auto">
         <b-nav-form>

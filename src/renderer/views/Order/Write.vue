@@ -5,7 +5,7 @@
         <h4>주문장 정보</h4>
         <b-row class="mb-1">
           <b-col cols="1">주문자</b-col>
-          <b-col>
+          <b-col cols="3">
             <b-input-group>
               <b-input ref="name" v-model="form.name" @keyup.enter="writeOrder" disabled></b-input>
               <input type="hidden" v-model="form.customerId"/>
@@ -14,20 +14,6 @@
               </b-input-group-append>
             </b-input-group>
           </b-col>
-        </b-row>
-        <b-row class="mb-1">
-          <b-col cols="1">택배 배송</b-col>
-          <b-col>
-              <b-datepicker v-model="form.deliveryStart" locale="ko"></b-datepicker>
-          </b-col>
-          <b-col cols="1">배송 완료</b-col>
-          <b-col>
-            <b-datepicker v-model="form.deliveryEnd" locale="ko"></b-datepicker>
-          </b-col>
-          <b-col cols="1">송장번호</b-col>
-          <b-col><b-input v-model="form.deliveryCode" @keyup.enter="writeOrder"></b-input></b-col>
-        </b-row>
-        <b-row class="mb-1">
           <b-col cols="1">주소</b-col>
           <b-col>
             <b-input-group>
@@ -37,6 +23,14 @@
               </b-input-group-append>
             </b-input-group>
           </b-col>
+        </b-row>
+        <b-row class="mb-1">
+          <b-col cols="1">출고일</b-col>
+          <b-col><b-datepicker v-model="form.deliveryStart" locale="ko"></b-datepicker></b-col>
+          <b-col cols="1">송장번호</b-col>
+          <b-col><b-input v-model="form.deliveryCode" @keyup.enter="writeOrder"></b-input></b-col>
+          <b-col cols="1">배송 완료</b-col>
+          <b-col><b-datepicker v-model="form.deliveryEnd" locale="ko"></b-datepicker></b-col>
         </b-row>
         <b-row class="mb-1">
           <b-col cols="1">설명</b-col>

@@ -36,11 +36,6 @@ export default new Router({
               component: require('@/views/User/FirstWrite').default
             },
             {
-              path: 'write',
-              name: 'user-write',
-              component: require('@/views/User/Write').default
-            },
-            {
               path: 'detail/:id',
               name: 'user-detail',
               component: require('@/views/User/Detail').default
@@ -87,6 +82,18 @@ export default new Router({
           ]
         },
         {
+          path: '/store',
+          name: 'store',
+          component: require('@/views/Store/Store').default,
+          children: [
+            {
+              path: '',
+              name: 'store-list',
+              component: require('@/views/Store/Index').default
+            }
+          ]
+        },
+        {
           path: '/board',
           name: 'board',
           component: require('@/views/Board/Board').default,
@@ -112,6 +119,18 @@ export default new Router({
               path: '',
               name: 'schedule-list',
               component: require('@/views/Schedule/Index').default
+            }
+          ]
+        },
+        {
+          path: '/trade',
+          name: 'trade',
+          component: require('@/views/Trade/Trade').default,
+          children: [
+            {
+              path: '',
+              name: 'trade-list',
+              component: require('@/views/Trade/Index').default
             }
           ]
         }
