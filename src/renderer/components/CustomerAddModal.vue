@@ -11,19 +11,19 @@
       <b-container fluid>
         <b-row class="mb-1">
           <b-col cols="3">이름</b-col>
-          <b-col><b-input ref="name" v-model="form.name" @keyup.enter="writeCustomer"></b-input></b-col>
+          <b-col><b-input ref="name" size="sm" v-model="form.name" @keyup.enter="writeCustomer"></b-input></b-col>
         </b-row>
         <b-row class="mb-1">
           <b-col cols="3">연락처</b-col>
-          <b-col><b-input ref="phone" v-model="form.phone" @keyup.enter="writeCustomer"></b-input></b-col>
+          <b-col><b-input ref="phone" size="sm" v-model="form.phone" @keyup.enter="writeCustomer"></b-input></b-col>
         </b-row>
         <b-row class="mb-1">
           <b-col cols="3">주소(1)</b-col>
           <b-col>
             <b-input-group>
-              <b-input v-model="form.address1" @keyup.enter="writeCustomer"></b-input>
+              <b-input v-model="form.address1" size="sm" @keyup.enter="writeCustomer"></b-input>
               <b-input-group-append>
-                <b-button variant="outline-success" @click="addrSearch('address1')">주소검색</b-button>
+                <b-button variant="outline-success" size="sm" @click="addrSearch('address1')">주소검색</b-button>
               </b-input-group-append>
             </b-input-group>
           </b-col>
@@ -32,9 +32,9 @@
           <b-col cols="3">주소(2)</b-col>
           <b-col>
             <b-input-group>
-              <b-input v-model="form.address2" @keyup.enter="writeCustomer"></b-input>
+              <b-input v-model="form.address2" size="sm" @keyup.enter="writeCustomer"></b-input>
               <b-input-group-append>
-                <b-button variant="outline-success" @click="addrSearch('address2')">주소검색</b-button>
+                <b-button variant="outline-success" size="sm" @click="addrSearch('address2')">주소검색</b-button>
               </b-input-group-append>
             </b-input-group>
           </b-col>
@@ -43,9 +43,9 @@
           <b-col cols="3">주소(3)</b-col>
           <b-col>
             <b-input-group>
-              <b-input v-model="form.address3" @keyup.enter="writeCustomer"></b-input>
+              <b-input v-model="form.address3" size="sm" @keyup.enter="writeCustomer"></b-input>
               <b-input-group-append>
-                <b-button variant="outline-success" @click="addrSearch('address3')">주소검색</b-button>
+                <b-button variant="outline-success" size="sm" @click="addrSearch('address3')">주소검색</b-button>
               </b-input-group-append>
             </b-input-group>
           </b-col>
@@ -56,14 +56,14 @@
         </b-row>
         <b-row class="mb-1">
           <b-col cols="3">설명</b-col>
-          <b-col><b-input v-model="form.description" @keyup.enter="writeCustomer"></b-input></b-col>
+          <b-col><b-input v-model="form.description" size="sm" @keyup.enter="writeCustomer"></b-input></b-col>
         </b-row>
       </b-container>
       <template v-slot:modal-footer="{ ok, cancel }">
-        <b-button variant="success" @click="ok()">
+        <b-button variant="success" size="sm" @click="ok()">
           등록
         </b-button>
-        <b-button variant="danger" @click="cancel()">
+        <b-button variant="danger" size="sm" @click="cancel()">
           취소
         </b-button>
       </template>

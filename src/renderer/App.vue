@@ -30,5 +30,6 @@
 
 body {
   font-family: 'Minguk-Regular' !important;
+  font-size: 0.8rem !important;
 }
 </style>

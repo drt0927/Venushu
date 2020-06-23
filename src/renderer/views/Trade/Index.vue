@@ -40,12 +40,24 @@
         <b-col cols="auto" class="p-1"><b-button v-b-modal.modal-add-trade variant="success">등록</b-button></b-col>
       </b-row>
       </b-container>
-      <b-table id="trade-table" striped sticky-header="500px"
+      <b-table id="trade-table" hover sticky-header="500px"
       :items="readTrade"
       :fields="fields"
       :busy.sync="pagination.isBusy"
       :per-page="pagination.perPage"
       :current-page="pagination.currentPage">
+      <template v-slot:cell(createDate)="data">
+        {{ $moment(data.value).format('YYYY-MM-DD') }}
+      </template>
+      <template v-slot:cell(inOutDate)="data">
+        {{ $moment(data.value).format('YYYY-MM-DD') }}
+      </template>
+      <template v-slot:cell(isConfirm)="data">
+        <b-check v-model="data.value" disabled></b-check>
+      </template>
+      <template v-slot:cell(inOut)="data">
+        {{ data.value === 0 ? "입고" : "출고" }}
+      </template>
       </b-table>
       <b-pagination v-model="pagination.currentPage" 
       :total-rows="pagination.totalRows"
@@ -72,8 +84,8 @@
           <b-col cols="1">매장</b-col>
           <b-col>
             <b-input-group>
-              <b-input ref="name" v-model="form.storeText" disabled></b-input>
-              <input type="hidden" v-model="form.storeId"/>
+              <b-input ref="store-text" v-model="form.storeText" disabled></b-input>
+              <input type="hidden" ref="store-id" v-model="form.storeId"/>
               <b-input-group-append>
                 <b-button variant="outline-success" @click="storeSearch()">검색</b-button>
               </b-input-group-append>
@@ -107,10 +119,13 @@
         </b-button>
       </template>
     </b-modal>
+    <store-search-modal @row-selected="storeSelected"></store-search-modal>
   </b-container>
 </template>
 
 <script>
+import StoreSearchModal from '../../components/StoreSearchModal'
+
 export default {
   data () {
     return {
@@ -150,6 +165,9 @@ export default {
   created () {
     this.$bus.$emit('SET_MENU_NAVIGATE', [{ text: '수평 이동', to: { path: '/trade' } }])
   },
+  components: {
+    'store-search-modal': StoreSearchModal
+  },
   methods: {
     writeTrade (modalEvt) {
       const vm = this
@@ -180,6 +198,11 @@ export default {
     storeSearch () {
       this.$bvModal.show('modal-search-store')
     },
+    storeSelected (item) {
+      console.log(item)
+      this.form.storeText = item.name
+      this.form.storeId = item._id
+    },
     checkValidation () {
       const vm = this
       if (!vm.form.productCode) {
@@ -196,19 +219,13 @@ export default {
 
       if (!vm.form.storeId) {
         vm.$common.messageBox.showToast(vm, '필수 항목 누락', '매장을 입력해주세요.')
-        vm.$refs['store-id'].$el.focus()
+        vm.$refs['store-text'].$el.focus()
         return false
       }
 
       if (!vm.form.inOutDate) {
         vm.$common.messageBox.showToast(vm, '필수 항목 누락', '입/출고일을 입력해주세요.')
         vm.$refs['in-out-date'].$el.focus()
-        return false
-      }
-
-      if (!vm.form.inOut) {
-        vm.$common.messageBox.showToast(vm, '필수 항목 누락', '구분을 입력해주세요.')
-        vm.$refs['in-out'].$el.focus()
         return false
       }
 
@@ -266,6 +283,9 @@ export default {
                 reject(err)
               }
               vm.pagination.isBusy = false
+              rows.forEach(row => {
+                row._rowVariant = row.isConfirm ? 'trade-confirm' : row.inOut === 0 ? 'trade-in' : 'trade-out'
+              })
               resolve(rows)
             })
         })

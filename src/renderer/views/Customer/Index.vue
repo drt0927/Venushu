@@ -4,16 +4,16 @@
       <b-container fluid>
         <b-row class="my-1">
           <b-col>이름</b-col>
-          <b-col cols="3"><b-input v-model="search.name" @keyup.enter="tableReload"></b-input></b-col>
+          <b-col cols="3"><b-input v-model="search.name" size="sm" @keyup.enter="tableReload"></b-input></b-col>
           <b-col>연락처</b-col>
-          <b-col cols="3"><b-input v-model="search.phone" @keyup.enter="tableReload"></b-input></b-col>
+          <b-col cols="3"><b-input v-model="search.phone" size="sm" @keyup.enter="tableReload"></b-input></b-col>
           <b-col>주소</b-col>
-          <b-col cols="3"><b-input v-model="search.address" @keyup.enter="tableReload"></b-input></b-col>
+          <b-col cols="3"><b-input v-model="search.address" size="sm" @keyup.enter="tableReload"></b-input></b-col>
         </b-row>
         <b-row>
           <b-col cols="1">행사알림</b-col>
           <b-col cols="3">
-            <b-select v-model="search.isNotify" @keyup.enter="tableReload">
+            <b-select v-model="search.isNotify" size="sm" @keyup.enter="tableReload">
               <b-select-option :value="null">전체</b-select-option>
               <b-select-option value="1">수신</b-select-option>
               <b-select-option value="0">미수신</b-select-option>
@@ -22,7 +22,7 @@
         </b-row>
         <b-row class="my-1">
           <b-col cols="12">
-            <b-button @click="tableReload">검색</b-button>
+            <b-button @click="tableReload" size="sm">검색</b-button>
           </b-col>
         </b-row>
       </b-container>
@@ -31,7 +31,7 @@
       <b-container fluid>
       <b-row>
         <b-col cols="auto" class="mr-auto p-1"><span>개수 : {{ pagination.totalRows }} </span></b-col>
-        <b-col cols="auto" class="p-1"><b-button v-b-modal.modal-add-customer variant="success">등록</b-button></b-col>
+        <b-col cols="auto" class="p-1"><b-button v-b-modal.modal-add-customer variant="success" size="sm">등록</b-button></b-col>
       </b-row>
       </b-container>
       <b-table id="customer-table" striped sticky-header="500px"
