@@ -10,15 +10,13 @@
       footer-text-variant="dark">
       <b-container fluid>
         <b-row class="mb-1">
-          <b-col cols="3">이름</b-col>
+          <b-col cols="2">이름</b-col>
           <b-col><b-input ref="name" size="sm" v-model="form.name" @keyup.enter="writeCustomer"></b-input></b-col>
-        </b-row>
-        <b-row class="mb-1">
-          <b-col cols="3">연락처</b-col>
+          <b-col cols="2">연락처</b-col>
           <b-col><b-input ref="phone" size="sm" v-model="form.phone" @keyup.enter="writeCustomer"></b-input></b-col>
         </b-row>
         <b-row class="mb-1">
-          <b-col cols="3">주소(1)</b-col>
+          <b-col cols="2">주소(1)</b-col>
           <b-col>
             <b-input-group>
               <b-input v-model="form.address1" size="sm" @keyup.enter="writeCustomer"></b-input>
@@ -29,7 +27,7 @@
           </b-col>
         </b-row>
         <b-row class="mb-1">
-          <b-col cols="3">주소(2)</b-col>
+          <b-col cols="2">주소(2)</b-col>
           <b-col>
             <b-input-group>
               <b-input v-model="form.address2" size="sm" @keyup.enter="writeCustomer"></b-input>
@@ -40,7 +38,7 @@
           </b-col>
         </b-row>
         <b-row class="mb-1">
-          <b-col cols="3">주소(3)</b-col>
+          <b-col cols="2">주소(3)</b-col>
           <b-col>
             <b-input-group>
               <b-input v-model="form.address3" size="sm" @keyup.enter="writeCustomer"></b-input>
@@ -51,21 +49,28 @@
           </b-col>
         </b-row>
         <b-row class="mb-1">
-          <b-col cols="3">행사알림</b-col>
+          <b-col cols="2">행사알림</b-col>
           <b-col><b-check type="checkbox" v-model="form.isNotify" @keyup.enter="writeCustomer"></b-check></b-col>
         </b-row>
         <b-row class="mb-1">
-          <b-col cols="3">설명</b-col>
+          <b-col cols="2">설명</b-col>
           <b-col><b-input v-model="form.description" size="sm" @keyup.enter="writeCustomer"></b-input></b-col>
         </b-row>
       </b-container>
       <template v-slot:modal-footer="{ ok, cancel }">
-        <b-button variant="success" size="sm" @click="ok()">
-          등록
-        </b-button>
-        <b-button variant="danger" size="sm" @click="cancel()">
-          취소
-        </b-button>
+        <b-container fluid>
+          <b-row>
+            <b-col cols="auto" class="mr-auto">
+              <b-button variant="success" size="sm" @click="ok()">
+                등록
+              </b-button>
+              <b-button size="sm" @click="cancel()">
+                취소
+              </b-button>
+            </b-col>
+            <b-col cols="auto"></b-col>
+          </b-row>
+        </b-container>
       </template>
     </b-modal>
     <div ref="daum-area" class="daum-layer-background">
@@ -93,6 +98,10 @@ export default {
       selectedAddressId: ''
     }
   },
+  props: [
+    'tempName',
+    'tempPhone'
+  ],
   methods: {
     addrSearch (id) {
       this.selectedAddressId = id
@@ -147,6 +156,8 @@ export default {
     modalShown () {
       this.$refs.name.$el.focus()
       this.clearCustomerForm()
+      this.form.name = this.tempName
+      this.form.phone = this.tempPhone
     },
     checkValidation () {
       const vm = this

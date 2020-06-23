@@ -7,7 +7,8 @@
       @dateClick="handleDataClick"
       @eventClick="handleEventClick"
       :events="readSchedule"
-      :displayEventTime="false"/>
+      :displayEventTime="false"
+      :height="500"/>
 
     <b-modal id="modal-add-schedule" ref="modal" title="일정 등록" size="xl"
       @ok="writeSchedule" @shown="addScheduleModalShown" @hidden="addScheduleModalHide"
@@ -20,23 +21,23 @@
       <b-container fluid>
         <b-row class="mb-1">
           <b-col cols="3">제목</b-col>
-          <b-col><b-input ref="title" v-model="form.title" @keyup.enter="writeSchedule"></b-input></b-col>
+          <b-col><b-input ref="title" v-model="form.title" size="sm" @keyup.enter="writeSchedule"></b-input></b-col>
         </b-row>
         <b-row class="mb-1">
           <b-col cols="3">일정</b-col>
           <b-col>
-            <b-calendar v-model="form.start"
+            <b-datepicker v-model="form.start" size="sm"
                         @context="onContextStart"
                         locale="ko-KR"
                         ref="start">
-            </b-calendar>
+            </b-datepicker>
           </b-col>
           <b-col>
-            <b-calendar v-model="form.end"
+            <b-datepicker v-model="form.end" size="sm"
                         @context="onContextEnd"
                         locale="ko-KR"
                         ref="end">
-            </b-calendar>
+            </b-datepicker>
           </b-col>
         </b-row>
         <b-row class="mb-1">
@@ -54,15 +55,23 @@
         </b-row>
       </b-container>
       <template v-slot:modal-footer="{ ok, cancel }">
-        <b-button v-show="form._id" variant="danger" @click="deleteSchedule">
-          삭제
-        </b-button>
-        <b-button variant="success" @click="ok()">
-          {{ okButtonText }}
-        </b-button>
-        <b-button variant="secondary" @click="cancel()">
-          취소
-        </b-button>
+        <b-container fluid>
+          <b-row>
+            <b-col cols="auto" class="mr-auto">
+              <b-button variant="success" @click="ok()" size="sm">
+                {{ okButtonText }}
+              </b-button>
+              <b-button variant="secondary" @click="cancel()" size="sm">
+                취소
+              </b-button>
+            </b-col>
+            <b-col cols="auto">
+              <b-button v-show="form._id" variant="danger" size="sm" @click="deleteSchedule">
+                삭제
+              </b-button>
+            </b-col>
+          </b-row>
+        </b-container>
       </template>
       <input type="hidden" v-model="form._id"/>
     </b-modal>
@@ -94,7 +103,7 @@ export default {
     }
   },
   created () {
-    this.$bus.$emit('SET_MENU_NAVIGATE', [{ text: '일정 관리', to: { path: '/schedule' } }])
+    this.$bus.$emit(this.$common.enum.emitMessage.SET_MENU_NAVIGATE, [{ text: '일정 관리', to: { path: '/schedule' } }])
   },
   methods: {
     handleDataClick (arg) {
@@ -105,9 +114,10 @@ export default {
       this.$bvModal.show('modal-add-schedule')
     },
     handleEventClick (arg) {
+      console.log(arg)
       this.form.title = arg.event.title
       this.form.start = this.$moment(arg.event.start).format('YYYY-MM-DD')
-      this.form.end = this.$moment(arg.event.end).format('YYYY-MM-DD')
+      this.form.end = arg.event.end ? this.$moment(arg.event.end).format('YYYY-MM-DD') : this.$moment(arg.event.start).format('YYYY-MM-DD')
       this.form._id = arg.event.extendedProps._id
       this.form.backgroundColor = arg.event.backgroundColor
       this.form.textColor = arg.event.textColor

@@ -11,22 +11,30 @@
       <b-container fluid>
         <b-row class="mb-1">
           <b-col cols="2">이름</b-col>
-          <b-col><b-input ref="name" v-model="form.name"></b-input></b-col>
+          <b-col><b-input ref="name" v-model="form.name" size="sm"></b-input></b-col>
           <b-col cols="2">연락처</b-col>
-          <b-col><b-input ref="contact" v-model="form.contact"></b-input></b-col>
+          <b-col><b-input ref="contact" v-model="form.contact" size="sm"></b-input></b-col>
         </b-row>
         <b-row class="mb-1">
           <b-col cols="2">택배 코드</b-col>
-          <b-col cols="4"><b-input ref="name" v-model="form.deliveryCode"></b-input></b-col>
+          <b-col cols="4"><b-input ref="delivery-code" v-model="form.deliveryCode" size="sm"></b-input></b-col>
         </b-row>
       </b-container>
       <template v-slot:modal-footer="{ ok, cancel }">
-        <b-button variant="success" @click="ok()">
-          등록
-        </b-button>
-        <b-button variant="danger" @click="cancel()">
-          취소
-        </b-button>
+        <b-container fluid>
+          <b-row>
+            <b-col cols="auto" class="mr-auto">
+              <b-button variant="success" @click="ok()" size="sm">
+                등록
+              </b-button>
+              <b-button @click="cancel()" size="sm">
+                취소
+              </b-button>
+            </b-col>
+            <b-col cols="auto">
+            </b-col>
+          </b-row>
+        </b-container>
       </template>
     </b-modal>
   </div>
@@ -43,6 +51,7 @@ export default {
       }
     }
   },
+  props: [ 'tempName' ],
   methods: {
     writeStore (modalEvt) {
       const vm = this
@@ -61,7 +70,7 @@ export default {
         if (!err) {
           vm.$emit('store-added', 'success')
         }
-        vm.clearBoardForm()
+        vm.clearStoreForm()
         vm.$bvModal.hide('modal-add-store')
       })
     },
@@ -70,12 +79,6 @@ export default {
       if (!vm.form.name) {
         vm.$common.messageBox.showToast(vm, '필수 항목 누락', '이름을 입력해주세요.')
         vm.$refs.name.$el.focus()
-        return false
-      }
-
-      if (!vm.form.contact) {
-        vm.$common.messageBox.showToast(vm, '필수 항목 누락', '연락처를 입력해주세요.')
-        vm.$refs.contact.$el.focus()
         return false
       }
 
@@ -90,6 +93,7 @@ export default {
       this.$refs.name.$el.focus()
       this.form.name = this.$user.name
       this.clearStoreForm()
+      this.form.name = this.tempName
     }
   }
 }

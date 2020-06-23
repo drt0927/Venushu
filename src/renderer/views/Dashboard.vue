@@ -6,7 +6,7 @@
 <script>
 export default {
   created () {
-    this.$bus.$emit('SET_MENU_NAVIGATE', [])
+    this.$bus.$emit(this.$common.enum.emitMessage.SET_MENU_NAVIGATE, [])
   }
 }
 </script>

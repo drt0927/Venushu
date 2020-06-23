@@ -1,9 +1,9 @@
 <template>
-  <div>
+  <b-container fluid>
       <b-container fluid>
         <b-row>
           <b-col cols="auto" class="mr-auto p-1"><span>개수 : {{ pagination.totalRows }} </span></b-col>
-          <b-col cols="auto" class="p-1"><b-button v-b-modal.modal-add-board variant="success">등록</b-button></b-col>
+          <b-col cols="auto" class="p-1"><b-button v-b-modal.modal-add-board size="sm" variant="success">등록</b-button></b-col>
         </b-row>
       </b-container>
       <b-table id="board-table" striped sticky-header="500px"
@@ -36,27 +36,34 @@
       <b-container fluid>
         <b-row class="mb-1">
           <b-col cols="3">작성자</b-col>
-          <b-col><b-input v-model="form.name" disabled></b-input></b-col>
+          <b-col><b-input v-model="form.name" size="sm" disabled></b-input></b-col>
         </b-row>
         <b-row class="mb-1">
           <b-col cols="3">제목</b-col>
-          <b-col><b-input ref="title" v-model="form.title"></b-input></b-col>
+          <b-col><b-input ref="title" v-model="form.title" size="sm"></b-input></b-col>
         </b-row>
         <b-row class="mb-1">
           <b-col cols="3">내용</b-col>
-          <b-col><b-textarea ref="contents" rows="10" v-model="form.contents"></b-textarea></b-col>
+          <b-col><b-textarea ref="contents" rows="10" v-model="form.contents" size="sm"></b-textarea></b-col>
         </b-row>
       </b-container>
       <template v-slot:modal-footer="{ ok, cancel }">
-        <b-button variant="success" @click="ok()">
-          등록
-        </b-button>
-        <b-button variant="danger" @click="cancel()">
-          취소
-        </b-button>
+        <b-container fluid>
+          <b-row>
+            <b-col cols="auto" class="mr-auto">
+              <b-button variant="success" @click="ok()" size="sm">
+                등록
+              </b-button>
+              <b-button @click="cancel()" size="sm">
+                취소
+              </b-button>
+            </b-col>
+            <b-col cols="auto"></b-col>
+          </b-row>
+        </b-container>
       </template>
     </b-modal>
-  </div>
+  </b-container>
 </template>
 
 <script>
@@ -79,14 +86,14 @@ export default {
       },
       pagination: {
         currentPage: 1,
-        perPage: 10,
+        perPage: 5,
         totalRows: 0,
         isBusy: false
       }
     }
   },
   created () {
-    this.$bus.$emit('SET_MENU_NAVIGATE', [{ text: '공지사항', to: { path: '/board/notice' } }])
+    this.$bus.$emit(this.$common.enum.emitMessage.SET_MENU_NAVIGATE, [{ text: '공지사항', to: { path: '/board/notice' } }])
   },
   methods: {
     writeBoard (modalEvt) {
@@ -165,7 +172,7 @@ export default {
 
           vm.pagination.totalRows = count
           vm.$db.boardDatastore.find(query)
-            .sort({ createDate: 1 })
+            .sort({ createDate: -1 })
             .skip((vm.pagination.currentPage - 1) * vm.pagination.perPage)
             .limit(vm.pagination.perPage)
             .exec((err, rows) => {

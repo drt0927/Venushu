@@ -2,25 +2,27 @@
   <b-container fluid>
     <b-row class="my-2">
       <b-col>작성자</b-col>
-      <b-col cols="3"><b-input v-model="board.name" disabled></b-input></b-col>
+      <b-col cols="3"><b-input v-model="board.name" size="sm" disabled></b-input></b-col>
       <b-col>작성일</b-col>
-      <b-col cols="3"><b-input v-model="createDate" disabled></b-input></b-col>
+      <b-col cols="3"><b-input v-model="createDate" size="sm" disabled></b-input></b-col>
       <b-col>게시판</b-col>
-      <b-col cols="3"><b-input v-model="board.typeText" disabled></b-input></b-col>
+      <b-col cols="3"><b-input v-model="board.typeText" size="sm" disabled></b-input></b-col>
     </b-row>
     <b-row class="my-2">
       <b-col cols="1">제목</b-col>
-      <b-col><b-input v-model="board.title"></b-input></b-col>
+      <b-col><b-input v-model="board.title" size="sm"></b-input></b-col>
     </b-row>
     <b-row class="my-2">
       <b-col cols="1">내용</b-col>
-      <b-col><b-textarea v-model="board.contents" rows="10"></b-textarea></b-col>
+      <b-col><b-textarea v-model="board.contents" size="sm" rows="10"></b-textarea></b-col>
     </b-row>
     <b-row>
-      <b-col cols="4">
-        <b-button variant="primary" @click="updateBoard">수정</b-button>
-        <b-button variant="info" @click="goIndex">목록</b-button>
-        <b-button variant="danger" @click="deleteBoard">삭제</b-button>
+      <b-col cols="auto" class="mr-auto">
+        <b-button variant="success" @click="updateBoard" size="sm">수정</b-button>
+        <b-button @click="goIndex" size="sm">목록</b-button>
+      </b-col>
+      <b-col cols="auto">
+        <b-button variant="danger" @click="deleteBoard" size="sm">삭제</b-button>
       </b-col>
     </b-row>
   </b-container>
@@ -34,7 +36,7 @@ export default {
     }
   },
   created () {
-    this.$bus.$emit('SET_MENU_NAVIGATE', [{ text: '공지사항', to: { path: '/board/notice' } }, { text: '상세' }])
+    this.$bus.$emit(this.$common.enum.emitMessage.SET_MENU_NAVIGATE, [{ text: '공지사항', to: { path: '/board/notice' } }, { text: '상세' }])
   },
   computed: {
     createDate () {

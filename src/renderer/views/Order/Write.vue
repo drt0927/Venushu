@@ -7,70 +7,73 @@
           <b-col cols="1">주문자</b-col>
           <b-col cols="3">
             <b-input-group>
-              <b-input ref="name" v-model="form.name" @keyup.enter="writeOrder" disabled></b-input>
-              <input type="hidden" v-model="form.customerId"/>
+              <b-input ref="name" v-model="form.name" size="sm" @keyup.enter="writeOrder" disabled></b-input>
+              <input type="hidden" v-model="form.customerId" size="sm"/>
               <b-input-group-append>
-                <b-button variant="outline-success" @click="customerSearch()">검색</b-button>
+                <b-button variant="outline-success" @click="customerSearch()" size="sm">검색</b-button>
               </b-input-group-append>
             </b-input-group>
           </b-col>
           <b-col cols="1">주소</b-col>
           <b-col>
             <b-input-group>
-              <b-input ref="address" v-model="form.address" @keyup.enter="writeOrder"></b-input>
+              <b-input ref="address" v-model="form.address" size="sm" @keyup.enter="writeOrder"></b-input>
               <b-input-group-append>
-                <b-button variant="outline-success" @click="addrSearch()">주소검색</b-button>
+                <b-button variant="outline-success" @click="addrSearch()" size="sm">주소검색</b-button>
               </b-input-group-append>
             </b-input-group>
           </b-col>
         </b-row>
         <b-row class="mb-1">
           <b-col cols="1">출고일</b-col>
-          <b-col><b-datepicker v-model="form.deliveryStart" locale="ko"></b-datepicker></b-col>
+          <b-col><b-datepicker v-model="form.deliveryStart" size="sm" locale="ko"></b-datepicker></b-col>
           <b-col cols="1">송장번호</b-col>
-          <b-col><b-input v-model="form.deliveryCode" @keyup.enter="writeOrder"></b-input></b-col>
+          <b-col><b-input v-model="form.deliveryCode" size="sm" @keyup.enter="writeOrder"></b-input></b-col>
           <b-col cols="1">배송 완료</b-col>
-          <b-col><b-datepicker v-model="form.deliveryEnd" locale="ko"></b-datepicker></b-col>
+          <b-col><b-datepicker v-model="form.deliveryEnd" size="sm" locale="ko"></b-datepicker></b-col>
         </b-row>
         <b-row class="mb-1">
           <b-col cols="1">설명</b-col>
-          <b-col><b-input v-model="form.description" @keyup.enter="writeOrder"></b-input></b-col>
+          <b-col><b-input v-model="form.description" size="sm" @keyup.enter="writeOrder"></b-input></b-col>
         </b-row>
       </div>
       
       <div>
-        <h4>상품등록</h4>
         <b-row>
-          <b-col cols="auto" class="mr-auto"></b-col>
+          <b-col cols="auto" class="mr-auto"><h4>상품등록</h4></b-col>
           <b-col cols="auto" class="">
-            <b-icon-cart-plus @click="addProduct"></b-icon-cart-plus>
+            <b-button size="sm" variant="info"><b-icon-cart-plus @click="addProduct"></b-icon-cart-plus></b-button>
           </b-col>
         </b-row>
-        <div v-for="(item, index) in form.products" v-bind:key="index" style="border:1px solid lightgray; padding: 5px;">
+        <div style="border:1px solid lightgray; padding: 10px;">
           <b-row class="mb-1">
-            <b-col cols="1">품번</b-col>
-            <b-col><b-input ref="product-code" v-model="item.code" @keyup.shift.enter="addProduct"></b-input></b-col>
-            <b-col cols="1">사이즈</b-col>
-            <b-col><b-input ref="product-size" v-model="item.size" @keyup.shift.enter="addProduct"></b-input></b-col>
-            <b-col cols="1">색상</b-col>
-            <b-col><b-input ref="product-color" v-model="item.color" @keyup.shift.enter="addProduct"></b-input></b-col>
+            <b-col style="text-align:center;">품번</b-col>
+            <b-col style="text-align:center;">색상</b-col>
+            <b-col style="text-align:center;">사이즈</b-col>
+            <b-col style="text-align:center;">수량</b-col>
+            <b-col style="text-align:center;">금액(단가)</b-col>
+            <b-col style="text-align:center;"></b-col>
           </b-row>
+        </div>
+        <div v-for="(item, index) in form.products" v-bind:key="index" style="border:1px solid lightgray; border-top: none; padding: 10px;">
           <b-row class="mb-1">
-            <b-col cols="1">수량</b-col>
-            <b-col cols="3"><b-input ref="product-count" type="number" v-model="item.count" @keyup.shift.enter="addProduct"></b-input></b-col>
-            <b-col cols="1">금액(단가)</b-col>
-            <b-col cols="3"><b-input ref="product-amt" type="number" v-model="item.amt" @keyup.shift.enter="addProduct"></b-input></b-col>
-            <b-col cols="auto"><b-icon-cart-dash @click="removeProduct(index)"></b-icon-cart-dash></b-col>
+            <b-col><b-input ref="product-code" v-model="item.code" size="sm" @keyup.shift.enter="addProduct"></b-input></b-col>
+            <b-col><b-input ref="product-color" v-model="item.color" size="sm" @keyup.shift.enter="addProduct"></b-input></b-col>
+            <b-col><b-input ref="product-size" v-model="item.size" size="sm" @keyup.shift.enter="addProduct"></b-input></b-col>
+            <b-col><b-input ref="product-count" type="number" v-model="item.count" size="sm" @keyup.shift.enter="addProduct"></b-input></b-col>
+            <b-col><b-input ref="product-amt" type="number" v-model="item.amt" size="sm" @keyup.shift.enter="addProduct"></b-input></b-col>
+            <b-col><b-button size="sm"><b-icon-cart-dash @click="removeProduct(index)"></b-icon-cart-dash></b-button></b-col>
           </b-row>
         </div>
       </div>
+      <b-button variant="success" @click="writeOrder" size="sm" class="my-2">
+        등록
+      </b-button>
+      <b-button @click="goIndex" size="sm" class="my-2">
+        취소
+      </b-button>
     </b-container>
-    <b-button variant="success" @click="writeOrder">
-      등록
-    </b-button>
-    <!-- <b-button variant="danger" @click="cancel()">
-      취소
-    </b-button> -->
+    
     <div ref="daum-area" class="daum-layer-background">
       <div class="daum-wrapper">
         <b-icon-x class="daum-layer-close" @click="addrSearchClose"></b-icon-x>
@@ -100,7 +103,7 @@ export default {
     }
   },
   created () {
-    this.$bus.$emit('SET_MENU_NAVIGATE', [{ text: '주문장 관리', to: { path: '/order' } }, { text: '생성' }])
+    this.$bus.$emit(this.$common.enum.emitMessage.SET_MENU_NAVIGATE, [{ text: '주문장 관리', to: { path: '/order' } }, { text: '생성' }])
   },
   components: {
     'customer-search-modal': CustomerSearchModal
@@ -151,7 +154,6 @@ export default {
           vm.$common.messageBox.showMessageBox(vm, '성공', '주문장이 생성 되었습니다.').then((value) => {
             vm.goIndex()
           })
-          // vm.tableReload()
         }
         vm.clearOrderForm()
         vm.$bvModal.hide('modal-add-order')
@@ -223,7 +225,6 @@ export default {
       })
     },
     removeProduct (index) {
-      console.log(index)
       this.form.products.splice(index, 1)
     }
   }

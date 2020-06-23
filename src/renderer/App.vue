@@ -32,4 +32,8 @@ body {
   font-family: 'Minguk-Regular' !important;
   font-size: 0.8rem !important;
 }
+
+.table th, .table td {
+  padding: 0.5rem !important;
+}
 </style>

@@ -1,43 +1,41 @@
 <template>
   <b-container fluid>
-    <b-card bg-variant="light" class="my-2">
-      <b-container fluid>
-        <b-row class="my-1">
-          <b-col>구분</b-col>
-          <b-col cols="3">
-            <b-select v-model="search.isConfirm" @keyup.enter="tableReload">
-              <b-select-option :value="null">전체</b-select-option>
-              <b-select-option value="0">입고</b-select-option>
-              <b-select-option value="1">출고</b-select-option>
-            </b-select>
-          </b-col>
-          <b-col>매장</b-col>
-          <b-col cols="3"><b-input v-model="search.storeText" @keyup.enter="tableReload"></b-input></b-col>
-          <b-col>품번</b-col>
-          <b-col cols="3"><b-input v-model="search.productCode" @keyup.enter="tableReload"></b-input></b-col>
-        </b-row>
-        <b-row>
-          <b-col cols="1">확정여부</b-col>
-          <b-col cols="3">
-            <b-select v-model="search.isConfirm" @keyup.enter="tableReload">
-              <b-select-option :value="null">전체</b-select-option>
-              <b-select-option value="1">확정</b-select-option>
-              <b-select-option value="0">미확정</b-select-option>
-            </b-select>
-          </b-col>
-        </b-row>
-        <b-row class="my-1">
-          <b-col cols="12">
-            <b-button @click="tableReload">검색</b-button>
-          </b-col>
-        </b-row>
-      </b-container>
+    <b-card bg-variant="light">
+      <b-row class="my-1">
+        <b-col cols="2">구분</b-col>
+        <b-col cols="3">
+          <b-select v-model="search.inOut" size="sm" @keyup.enter="tableReload">
+            <b-select-option :value="null">전체</b-select-option>
+            <b-select-option :value="10">입고</b-select-option>
+            <b-select-option :value="20">출고</b-select-option>
+          </b-select>
+        </b-col>
+        <b-col cols="2">확정여부</b-col>
+        <b-col cols="3">
+          <b-select v-model="search.isConfirm" size="sm" @keyup.enter="tableReload">
+            <b-select-option :value="null">전체</b-select-option>
+            <b-select-option :value="true">확정</b-select-option>
+            <b-select-option :value="false">미확정</b-select-option>
+          </b-select>
+        </b-col>
+      </b-row>
+      <b-row>
+        <b-col cols="2">품번</b-col>
+        <b-col cols="3"><b-input v-model="search.productCode" size="sm" @keyup.enter="tableReload"></b-input></b-col>
+        <b-col cols="2">매장</b-col>
+        <b-col cols="3"><b-input v-model="search.storeText" size="sm" @keyup.enter="tableReload"></b-input></b-col>
+      </b-row>
+      <b-row class="my-1">
+        <b-col cols="12">
+          <b-button @click="tableReload" size="sm">검색</b-button>
+        </b-col>
+      </b-row>
     </b-card>
     <div>
       <b-container fluid>
       <b-row>
         <b-col cols="auto" class="mr-auto p-1"><span>개수 : {{ pagination.totalRows }} </span></b-col>
-        <b-col cols="auto" class="p-1"><b-button v-b-modal.modal-add-trade variant="success">등록</b-button></b-col>
+        <b-col cols="auto" class="p-1"><b-button v-b-modal.modal-add-trade size="sm" variant="success">등록</b-button></b-col>
       </b-row>
       </b-container>
       <b-table id="trade-table" hover sticky-header="500px"
@@ -56,7 +54,10 @@
         <b-check v-model="data.value" disabled></b-check>
       </template>
       <template v-slot:cell(inOut)="data">
-        {{ data.value === 0 ? "입고" : "출고" }}
+        {{ data.value === 10 ? "입고" : "출고" }}
+      </template>
+      <template v-slot:cell(btnModify)="row">
+        <b-link @click="modifyModalOpen(row.item)">수정</b-link>
       </template>
       </b-table>
       <b-pagination v-model="pagination.currentPage" 
@@ -76,30 +77,30 @@
       <b-container fluid>
         <b-row class="mb-1">
           <b-col cols="1">품번</b-col>
-          <b-col><b-input ref="product-code" v-model="form.productCode"></b-input></b-col>
+          <b-col><b-input ref="product-code" v-model="form.productCode" size="sm"></b-input></b-col>
           <b-col cols="1">수량</b-col>
-          <b-col><b-input ref="count" v-model="form.count"></b-input></b-col>
+          <b-col><b-input ref="count" v-model="form.count" size="sm"></b-input></b-col>
         </b-row>
         <b-row class="mb-1">
           <b-col cols="1">매장</b-col>
           <b-col>
             <b-input-group>
-              <b-input ref="store-text" v-model="form.storeText" disabled></b-input>
+              <b-input ref="store-text" v-model="form.storeText" size="sm" disabled></b-input>
               <input type="hidden" ref="store-id" v-model="form.storeId"/>
               <b-input-group-append>
-                <b-button variant="outline-success" @click="storeSearch()">검색</b-button>
+                <b-button variant="outline-success" size="sm" @click="storeSearch()">검색</b-button>
               </b-input-group-append>
             </b-input-group>
           </b-col>
           <b-col cols="1">입/출고일</b-col>
-          <b-col><b-datepicker ref="in-out-date" v-model="form.inOutDate" locale="ko"></b-datepicker></b-col>
+          <b-col><b-datepicker ref="in-out-date" v-model="form.inOutDate" size="sm" locale="ko"></b-datepicker></b-col>
         </b-row>
         <b-row>
           <b-col cols="1">구분</b-col>
           <b-col>
-            <b-select ref="in-out" v-model="form.inOut" @keyup.enter="tableReload">
-              <b-select-option value="0">입고</b-select-option>
-              <b-select-option value="1">출고</b-select-option>
+            <b-select ref="in-out" v-model="form.inOut" size="sm" @keyup.enter="tableReload">
+              <b-select-option :value="10">입고</b-select-option>
+              <b-select-option :value="20">출고</b-select-option>
             </b-select>
           </b-col>
           <b-col cols="1">확정처리</b-col>
@@ -107,16 +108,86 @@
         </b-row>
         <b-row class="mb-1">
           <b-col cols="1">비고</b-col>
-          <b-col><b-input ref="description" v-model="form.description"></b-input></b-col>
+          <b-col><b-input ref="description" v-model="form.description" size="sm"></b-input></b-col>
         </b-row>
       </b-container>
       <template v-slot:modal-footer="{ ok, cancel }">
-        <b-button variant="success" @click="ok()">
-          등록
-        </b-button>
-        <b-button variant="danger" @click="cancel()">
-          취소
-        </b-button>
+        <b-container fluid>
+          <b-row>
+            <b-col cols="auto" class="mr-auto">
+              <b-button variant="success" @click="ok()" size="sm">
+                등록
+              </b-button>
+              <b-button @click="cancel()" size="sm">
+                취소
+              </b-button>
+            </b-col>
+            <b-col cols="auto">
+            </b-col>
+          </b-row>
+        </b-container>
+      </template>
+    </b-modal>
+    <b-modal id="modal-modify-trade" ref="modal" title="수평 이동 수정" size="lg"
+      @ok="modifyTrade" @hidden="modifyModalclose"
+      header-bg-variant="dark"
+      header-text-variant="light"
+      body-bg-variant="light"
+      body-text-variant="dark"
+      footer-bg-variant="warning"
+      footer-text-variant="dark">
+      <b-container fluid>
+        <b-row class="mb-1">
+          <b-col cols="1">품번</b-col>
+          <b-col><b-input ref="product-code" v-model="trade.productCode" size="sm"></b-input></b-col>
+          <b-col cols="1">수량</b-col>
+          <b-col><b-input ref="count" v-model="trade.count" size="sm"></b-input></b-col>
+        </b-row>
+        <b-row class="mb-1">
+          <b-col cols="1">매장</b-col>
+          <b-col>
+            <b-input-group>
+              <b-input ref="store-text" v-model="trade.storeText" size="sm" disabled></b-input>
+              <input type="hidden" ref="store-id" v-model="trade.storeId"/>
+              <b-input-group-append>
+                <b-button variant="outline-success" size="sm" @click="storeSearch()">검색</b-button>
+              </b-input-group-append>
+            </b-input-group>
+          </b-col>
+          <b-col cols="1">입/출고일</b-col>
+          <b-col><b-datepicker ref="in-out-date" v-model="trade.inOutDate" size="sm" locale="ko"></b-datepicker></b-col>
+        </b-row>
+        <b-row>
+          <b-col cols="1">구분</b-col>
+          <b-col>
+            <b-select ref="in-out" v-model="trade.inOut" size="sm" @keyup.enter="tableReload">
+              <b-select-option :value="10">입고</b-select-option>
+              <b-select-option :value="20">출고</b-select-option>
+            </b-select>
+          </b-col>
+          <b-col cols="1">확정처리</b-col>
+          <b-col><b-check ref="is-confirm" v-model="trade.isConfirm"></b-check></b-col>
+        </b-row>
+        <b-row class="mb-1">
+          <b-col cols="1">비고</b-col>
+          <b-col><b-input ref="description" v-model="trade.description" size="sm"></b-input></b-col>
+        </b-row>
+      </b-container>
+      <template v-slot:modal-footer="{ ok, cancel }">
+        <b-container fluid>
+          <b-row>
+            <b-col cols="auto" class="mr-auto">
+              <b-button variant="success" @click="ok()" size="sm">
+                수정
+              </b-button>
+              <b-button @click="cancel()" size="sm">
+                취소
+              </b-button>
+            </b-col>
+            <b-col cols="auto">
+            </b-col>
+          </b-row>
+        </b-container>
       </template>
     </b-modal>
     <store-search-modal @row-selected="storeSelected"></store-search-modal>
@@ -135,10 +206,11 @@ export default {
         storeText: '',
         storeId: '',
         inOutDate: new Date(),
-        inOut: 0, // [ 0 - 입고 | 1 - 출고 ]
+        inOut: 10, // [ 10 - 입고 | 20 - 출고 ]
         isConfirm: false,
         description: ''
       },
+      trade: {},
       fields: [
         { key: 'createDate', label: '등록일' },
         { key: 'productCode', label: '품번' },
@@ -146,7 +218,8 @@ export default {
         { key: 'storeText', label: '매장' },
         { key: 'inOutDate', label: '입/출고일' },
         { key: 'inOut', label: '구분' },
-        { key: 'isConfirm', label: '확정처리' }
+        { key: 'isConfirm', label: '확정처리' },
+        { key: 'btnModify', label: '수정' }
       ],
       search: {
         inOut: null,
@@ -156,19 +229,38 @@ export default {
       },
       pagination: {
         currentPage: 1,
-        perPage: 10,
+        perPage: 5,
         totalRows: 0,
         isBusy: false
       }
     }
   },
   created () {
-    this.$bus.$emit('SET_MENU_NAVIGATE', [{ text: '수평 이동', to: { path: '/trade' } }])
+    this.$bus.$emit(this.$common.enum.emitMessage.SET_MENU_NAVIGATE, [{ text: '수평 이동', to: { path: '/trade' } }])
   },
   components: {
     'store-search-modal': StoreSearchModal
   },
   methods: {
+    modifyModalOpen (row) {
+      this.trade = row
+      this.$bvModal.show('modal-modify-trade')
+    },
+    modifyModalclose () {
+      this.trade = {}
+    },
+    modifyTrade () {
+      const vm = this
+      vm.$db.tradeDatastore.update({ _id: vm.trade._id }, { $set: vm.trade }, {}, function (err, a) {
+        if (err) {
+          vm.$common.messageBox.showMessageBox(vm, '오류', '수정에 실패 하였습니다. 오류 : ' + err)
+          return
+        }
+        vm.$common.messageBox.showMessageBox(vm, '성공', '수평이동 정보가 수정되었습니다.').then((value) => {
+          vm.tableReload()
+        })
+      })
+    },
     writeTrade (modalEvt) {
       const vm = this
       if (!vm.checkValidation()) {
@@ -182,7 +274,7 @@ export default {
         storeText: vm.form.storeText,
         storeId: vm.form.storeId,
         inOutDate: vm.form.inOutDate,
-        inOut: vm.form.inOut, // [ 0 - 입고 | 1 - 출고 ]
+        inOut: vm.form.inOut, // [ 10 - 입고 | 20 - 출고 ]
         isConfirm: vm.form.isConfirm,
         description: vm.form.description,
         createDate: new Date()
@@ -199,7 +291,6 @@ export default {
       this.$bvModal.show('modal-search-store')
     },
     storeSelected (item) {
-      console.log(item)
       this.form.storeText = item.name
       this.form.storeId = item._id
     },
@@ -237,7 +328,7 @@ export default {
       this.form.storeText = ''
       this.form.storeId = ''
       this.form.inOutDate = new Date()
-      this.form.inOut = 0
+      this.form.inOut = 10
       this.form.isConfirm = false
       this.form.description = ''
     },
@@ -274,7 +365,7 @@ export default {
 
           vm.pagination.totalRows = count
           vm.$db.tradeDatastore.find(query)
-            .sort({ createDate: 1 })
+            .sort({ createDate: -1 })
             .skip((vm.pagination.currentPage - 1) * vm.pagination.perPage)
             .limit(vm.pagination.perPage)
             .exec((err, rows) => {
@@ -284,7 +375,7 @@ export default {
               }
               vm.pagination.isBusy = false
               rows.forEach(row => {
-                row._rowVariant = row.isConfirm ? 'trade-confirm' : row.inOut === 0 ? 'trade-in' : 'trade-out'
+                row._rowVariant = row.isConfirm ? '' : row.inOut === 10 ? 'trade-in' : 'trade-out'
               })
               resolve(rows)
             })

@@ -5,7 +5,7 @@
       <b-breadcrumb v-show="menuItems.length > 0" :items="menuItems" class="my-3"></b-breadcrumb>
     </b-container>
     <router-view />
-    <div class="copyright">Copyright(C) {{ $moment(new Date()).format('YYYY') }}. <b>filbert.</b> All rights reserved.</div>
+    <div class="copyright">Copyright ⓒ {{ $moment(new Date()).format('YYYY') }}. <b>슈슈와샤샤.</b> All rights reserved.</div>
   </div>
 </template>
 

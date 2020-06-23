@@ -21,6 +21,9 @@
         <template v-slot:cell(action)="data">
           <router-link :to="`/order/detail/${data.item._id}`">상세</router-link>
         </template>
+        <template v-slot:cell(createDate)="data">
+          {{ $moment(data.value).format('YYYY-MM-DD (dd)') }}
+        </template>
       </b-table>
       <b-pagination v-model="pagination.currentPage" 
       :total-rows="pagination.totalRows"
@@ -36,11 +39,10 @@ export default {
     return {
       fields: [
         { key: 'namelink', label: '주문자명' },
-        { key: 'productCode', label: '품번' },
-        { key: 'size', label: '사이즈' },
-        { key: 'amt', label: '금액(단가)' },
-        { key: 'count', label: '수량' },
-        { key: 'address', label: '주소' },
+        { key: 'deliveryStart', label: '출고일' },
+        { key: 'deliveryCode', label: '송장번호' },
+        { key: 'deliveryEnd', label: '배송 완료' },
+        { key: 'createDate', label: '날짜' },
         { key: 'action', label: '상세' }
       ],
       items: [],
@@ -72,7 +74,7 @@ export default {
 
           vm.pagination.totalRows = count
           vm.$db.orderDatastore.find(query)
-            .sort({ createDate: 1 })
+            .sort({ createDate: -1 })
             .skip((vm.pagination.currentPage - 1) * vm.pagination.perPage)
             .limit(vm.pagination.perPage)
             .exec((err, rows) => {

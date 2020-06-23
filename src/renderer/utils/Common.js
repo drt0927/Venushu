@@ -110,6 +110,9 @@ export default {
     boardType: {
       notice: '공지사항',
       comment: '코멘트'
+    },
+    emitMessage: {
+      SET_MENU_NAVIGATE: 'SET_MENU_NAVIGATE'
     }
   }
 }

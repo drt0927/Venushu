@@ -2,14 +2,14 @@
   <b-container fluid>
     <b-row class="my-2">
       <b-col>이름</b-col>
-      <b-col cols="3"><b-input v-model="customer.name"></b-input></b-col>
+      <b-col cols="3"><b-input size="sm" v-model="customer.name"></b-input></b-col>
       <b-col>연락처</b-col>
       <b-col cols="3">
         <b-input-group>
-          <b-input v-model="phone" disabled></b-input>
+          <b-input v-model="phone" size="sm" disabled></b-input>
           <b-input-group-append>
-            <b-button variant="outline-warning" v-b-modal.modal-update-phone>변경</b-button>
-            <b-button variant="outline-primary" v-b-modal.modal-open-phone>조회</b-button>
+            <b-button variant="outline-warning" size="sm" v-b-modal.modal-update-phone>변경</b-button>
+            <b-button variant="outline-primary" size="sm" v-b-modal.modal-open-phone>조회</b-button>
           </b-input-group-append>
         </b-input-group>
       </b-col>
@@ -20,22 +20,22 @@
       <b-col>주소1</b-col>
       <b-col cols="7">
         <b-input-group>
-          <b-input v-model="customer.address1"></b-input>
+          <b-input v-model="customer.address1" size="sm"></b-input>
           <b-input-group-append>
-            <b-button variant="outline-success" @click="addrSearch('address1')">주소검색</b-button>
+            <b-button variant="outline-success" size="sm" @click="addrSearch('address1')">주소검색</b-button>
           </b-input-group-append>
         </b-input-group>
       </b-col>
       <b-col>생성일</b-col>
-      <b-col cols="3"><b-input v-model="createDate" disabled></b-input></b-col>
+      <b-col cols="3"><b-input v-model="createDate" size="sm" disabled></b-input></b-col>
     </b-row>
     <b-row class="my-2">
       <b-col cols="1">주소2</b-col>
       <b-col cols="7">
         <b-input-group>
-          <b-input v-model="customer.address2"></b-input>
+          <b-input v-model="customer.address2" size="sm"></b-input>
           <b-input-group-append>
-            <b-button variant="outline-success" @click="addrSearch('address2')">주소검색</b-button>
+            <b-button variant="outline-success" size="sm" @click="addrSearch('address2')">주소검색</b-button>
           </b-input-group-append>
         </b-input-group>
       </b-col>
@@ -44,25 +44,29 @@
       <b-col cols="1">주소3</b-col>
       <b-col cols="7">
         <b-input-group>
-          <b-input v-model="customer.address3"></b-input>
+          <b-input v-model="customer.address3" size="sm"></b-input>
           <b-input-group-append>
-            <b-button variant="outline-success" @click="addrSearch('address3')">주소검색</b-button>
+            <b-button variant="outline-success" size="sm" @click="addrSearch('address3')">주소검색</b-button>
           </b-input-group-append>
         </b-input-group>
       </b-col>
     </b-row>
     <b-row class="my-2">
       <b-col cols="1">설명</b-col>
-      <b-col cols="7"><b-input v-model="customer.description"></b-input></b-col>
-      <b-col cols="4">
-        <b-button variant="primary" @click="updateCustomer">수정</b-button>
-        <b-button variant="info" @click="goIndex">목록</b-button>
-        <b-button variant="danger" @click="deleteCustomer">삭제</b-button>
-      </b-col>
+      <b-col cols="7"><b-input v-model="customer.description" size="sm"></b-input></b-col>
     </b-row>
     <b-row>
       <b-col>
-        <order-list-by-customer-id :customer-id="$route.params.id"></order-list-by-customer-id>
+        <order-list-by-customer-id :customer-id="$route.params.id" size="sm"></order-list-by-customer-id>
+      </b-col>
+    </b-row>
+    <b-row>
+      <b-col cols="auto" class="mr-auto">
+        <b-button variant="success" @click="updateCustomer" size="sm">수정</b-button>
+        <b-button @click="goIndex" size="sm">목록</b-button>
+      </b-col>
+      <b-col cols="auto">
+        <b-button variant="danger" @click="deleteCustomer" size="sm">삭제</b-button>
       </b-col>
     </b-row>
     <div ref="daum-area" class="daum-layer-background">
@@ -82,20 +86,27 @@
       <b-container fluid>
         <b-row class="mb-1">
           <b-col cols="3">연락처</b-col>
-          <b-col><b-input ref="phone" v-model="nonMaskingPhone" disabled></b-input></b-col>
+          <b-col><b-input ref="phone" v-model="nonMaskingPhone" size="sm" disabled></b-input></b-col>
         </b-row>
         <b-row class="mb-1">
           <b-col cols="3">비밀번호</b-col>
-          <b-col><b-input ref="open-password" type="password" @keyup.enter="openPhone"></b-input></b-col>
+          <b-col><b-input ref="open-password" type="password" size="sm" @keyup.enter="openPhone"></b-input></b-col>
         </b-row>
       </b-container>
       <template v-slot:modal-footer="{ cancel }">
-        <b-button variant="success" @click="openPhone">
-          조회
-        </b-button>
-        <b-button variant="danger" @click="cancel()">
-          닫기
-        </b-button>
+        <b-container fluid>
+          <b-row>
+            <b-col cols="auto" class="mr-auto">
+              <b-button variant="success" @click="openPhone" size="sm">
+                조회
+              </b-button>
+              <b-button @click="cancel()" size="sm">
+                닫기
+              </b-button>
+            </b-col>
+            <b-col cols="auto"></b-col>
+          </b-row>
+        </b-container>
       </template>
     </b-modal>
     <b-modal id="modal-update-phone" ref="modal" title="연락처 변경"
@@ -109,20 +120,27 @@
       <b-container fluid>
         <b-row class="mb-1">
           <b-col cols="3">연락처</b-col>
-          <b-col><b-input ref="new-phone" v-model="newPhone" @keyup.enter="changePhone"></b-input></b-col>
+          <b-col><b-input ref="new-phone" v-model="newPhone" size="sm" @keyup.enter="changePhone"></b-input></b-col>
         </b-row>
         <b-row class="mb-1">
           <b-col cols="3">비밀번호</b-col>
-          <b-col><b-input ref="change-password" type="password" @keyup.enter="changePhone"></b-input></b-col>
+          <b-col><b-input ref="change-password" type="password" size="sm" @keyup.enter="changePhone"></b-input></b-col>
         </b-row>
       </b-container>
       <template v-slot:modal-footer="{ cancel }">
-        <b-button variant="success" @click="changePhone">
-          변경
-        </b-button>
-        <b-button variant="danger" @click="cancel()">
-          닫기
-        </b-button>
+        <b-container fluid>
+          <b-row>
+            <b-col cols="auto" class="mr-auto">
+              <b-button variant="success" @click="changePhone" size="sm">
+                변경
+              </b-button>
+              <b-button @click="cancel()" size="sm">
+                닫기
+              </b-button>
+            </b-col>
+            <b-col cols="auto"></b-col>
+          </b-row>
+        </b-container>
       </template>
     </b-modal>
   </b-container>
@@ -143,7 +161,7 @@ export default {
     'order-list-by-customer-id': OrderListByCustomerId
   },
   created () {
-    this.$bus.$emit('SET_MENU_NAVIGATE', [{ text: '고객 관리', to: { path: '/customer' } }, { text: '상세' }])
+    this.$bus.$emit(this.$common.enum.emitMessage.SET_MENU_NAVIGATE, [{ text: '고객 관리', to: { path: '/customer' } }, { text: '상세' }])
   },
   computed: {
     phone () {

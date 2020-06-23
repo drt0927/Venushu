@@ -22,7 +22,7 @@
     "postinstall": "npm run lint:fix"
   },
   "build": {
-    "productName": "venushu",
+    "productName": "비너슈",
     "appId": "com.example.venushu",
     "directories": {
       "output": "build"

@@ -5,8 +5,7 @@
       header-text-variant="light"
       body-bg-variant="light"
       body-text-variant="dark"
-      footer-bg-variant="warning"
-      footer-text-variant="dark">
+      hide-footer>
       <b-container fluid>
         <b-card bg-variant="light" class="my-2">
           <b-container fluid>
@@ -17,8 +16,10 @@
               <b-col><b-input v-model="search.phone" size="sm" @keyup.enter="tableReload"></b-input></b-col>
             </b-row>
             <b-row class="my-1">
-              <b-col cols="12">
+              <b-col cols="auto" class="mr-auto">
                 <b-button @click="tableReload" size="sm">검색</b-button>
+              </b-col>
+              <b-col cols="auto">
                 <b-button v-b-modal.modal-add-customer variant="success" size="sm">등록</b-button>
               </b-col>
             </b-row>
@@ -49,7 +50,7 @@
         </div>
       </b-container>
     </b-modal>
-    <customer-add-modal @customer-added="customerAdded"></customer-add-modal>
+    <customer-add-modal @customer-added="customerAdded" :temp-name="search.name" :temp-phone="search.phone"></customer-add-modal>
   </div>
 </template>
 
@@ -72,7 +73,7 @@ export default {
       },
       pagination: {
         currentPage: 1,
-        perPage: 10,
+        perPage: 5,
         totalRows: 0,
         isBusy: false
       }
@@ -114,7 +115,7 @@ export default {
 
           vm.pagination.totalRows = count
           vm.$db.customerDatastore.find(query)
-            .sort({ createDate: 1 })
+            .sort({ createDate: -1 })
             .skip((vm.pagination.currentPage - 1) * vm.pagination.perPage)
             .limit(vm.pagination.perPage)
             .exec((err, rows) => {

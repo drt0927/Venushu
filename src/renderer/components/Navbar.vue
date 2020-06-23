@@ -2,7 +2,7 @@
   <b-navbar toggleable="lg" type="dark" variant="warning">
     <b-navbar-brand to="/dashboard">
       <!-- <img src="~@/assets/shiba.png" style="height: 56px;"/> -->
-      Venushu <small>({{ storeName }})</small>
+      비너슈 <small>({{ storeName }})</small>
     </b-navbar-brand>
 
     <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
@@ -18,14 +18,14 @@
       </b-navbar-nav>
       <!-- Right aligned nav items -->
       <b-navbar-nav class="ml-auto">
-        <b-nav-form>
+        <!-- <b-nav-form>
           <b-input-group>
-            <b-form-input placeholder="검색"></b-form-input>
+            <b-form-input placeholder="검색" size="sm"></b-form-input>
             <b-input-group-append>
-              <b-button><b-icon-search></b-icon-search></b-button>
+              <b-button size="sm"><b-icon-search></b-icon-search></b-button>
             </b-input-group-append>
           </b-input-group>
-        </b-nav-form>
+        </b-nav-form> -->
 
         <!-- <b-nav-item-dropdown text="Lang" right>
           <b-dropdown-item href="#">EN</b-dropdown-item>
@@ -89,5 +89,9 @@ export default {
 
 .navbar-dark .navbar-nav .nav-link.disabled {
   color: rgba(0, 0, 0, 0.25);
+}
+
+.nav-item .router-link-exact-active.router-link-active {
+  background: rgba(255, 255, 255, 0.25)
 }
 </style>

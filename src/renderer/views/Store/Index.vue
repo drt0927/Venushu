@@ -1,23 +1,21 @@
 <template>
   <b-container fluid>
     <b-card bg-variant="light" class="my-2">
-      <b-container fluid>
-        <b-row class="my-1">
-          <b-col cols="1">이름</b-col>
-          <b-col cols="3"><b-input v-model="search.name" @keyup.enter="tableReload"></b-input></b-col>
-        </b-row>
-        <b-row class="my-1">
-          <b-col cols="12">
-            <b-button @click="tableReload">검색</b-button>
-          </b-col>
-        </b-row>
-      </b-container>
+      <b-row class="my-1">
+        <b-col cols="2">이름</b-col>
+        <b-col cols="3"><b-input v-model="search.name" size="sm" @keyup.enter="tableReload"></b-input></b-col>
+      </b-row>
+      <b-row class="my-1">
+        <b-col cols="12">
+          <b-button @click="tableReload" size="sm">검색</b-button>
+        </b-col>
+      </b-row>
     </b-card>
     <div>
       <b-container fluid>
       <b-row>
         <b-col cols="auto" class="mr-auto p-1"><span>개수 : {{ pagination.totalRows }} </span></b-col>
-        <b-col cols="auto" class="p-1"><b-button v-b-modal.modal-add-store variant="success">등록</b-button></b-col>
+        <b-col cols="auto" class="p-1"><b-button v-b-modal.modal-add-store size="sm" variant="success">등록</b-button></b-col>
       </b-row>
       </b-container>
       <b-table id="store-table" striped sticky-header="500px"
@@ -27,7 +25,7 @@
       :per-page="pagination.perPage"
       :current-page="pagination.currentPage">
       <template v-slot:cell(btnModify)="row">
-        <b-button variant="info" @click="modifyModalOpen(row.item)">수정</b-button>
+        <b-link @click="modifyModalOpen(row.item)">수정</b-link>
       </template>
       </b-table>
       <b-pagination v-model="pagination.currentPage" 
@@ -48,22 +46,30 @@
       <b-container fluid>
         <b-row class="mb-1">
           <b-col cols="2">이름</b-col>
-          <b-col><b-input ref="name" v-model="store.name"></b-input></b-col>
+          <b-col><b-input ref="name" size="sm" v-model="store.name"></b-input></b-col>
           <b-col cols="2">연락처</b-col>
-          <b-col><b-input ref="contact" v-model="store.contact"></b-input></b-col>
+          <b-col><b-input ref="contact" size="sm" v-model="store.contact"></b-input></b-col>
         </b-row>
         <b-row class="mb-1">
           <b-col cols="2">택배 코드</b-col>
-          <b-col cols="4"><b-input ref="name" v-model="store.deliveryCode"></b-input></b-col>
+          <b-col cols="4"><b-input ref="name" size="sm" v-model="store.deliveryCode"></b-input></b-col>
         </b-row>
       </b-container>
       <template v-slot:modal-footer="{ ok, cancel }">
-        <b-button variant="success" @click="ok()">
-          수정
-        </b-button>
-        <b-button variant="danger" @click="cancel()">
-          취소
-        </b-button>
+        <b-container fluid>
+          <b-row>
+            <b-col cols="auto" class="mr-auto">
+              <b-button variant="success" @click="ok()" size="sm">
+                수정
+              </b-button>
+              <b-button @click="cancel()" size="sm">
+                취소
+              </b-button>
+            </b-col>
+            <b-col cols="auto">
+            </b-col>
+          </b-row>
+        </b-container>
       </template>
     </b-modal>
   </b-container>
@@ -87,7 +93,7 @@ export default {
       },
       pagination: {
         currentPage: 1,
-        perPage: 10,
+        perPage: 5,
         totalRows: 0,
         isBusy: false
       },
@@ -95,7 +101,7 @@ export default {
     }
   },
   created () {
-    this.$bus.$emit('SET_MENU_NAVIGATE', [{ text: '지점 관리', to: { path: '/store' } }])
+    this.$bus.$emit(this.$common.enum.emitMessage.SET_MENU_NAVIGATE, [{ text: '지점 관리', to: { path: '/store' } }])
   },
   components: {
     'store-add-modal': StoreAddModal
@@ -165,7 +171,7 @@ export default {
 
           vm.pagination.totalRows = count
           vm.$db.storeDatastore.find(query)
-            .sort({ createDate: 1 })
+            .sort({ createDate: -1 })
             .skip((vm.pagination.currentPage - 1) * vm.pagination.perPage)
             .limit(vm.pagination.perPage)
             .exec((err, rows) => {

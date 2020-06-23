@@ -1,31 +1,29 @@
 <template>
   <b-container fluid>
     <b-card bg-variant="light" class="my-2">
-      <b-container fluid>
-        <b-row class="my-1">
-          <b-col>이름</b-col>
-          <b-col cols="3"><b-input v-model="search.name" size="sm" @keyup.enter="tableReload"></b-input></b-col>
-          <b-col>연락처</b-col>
-          <b-col cols="3"><b-input v-model="search.phone" size="sm" @keyup.enter="tableReload"></b-input></b-col>
-          <b-col>주소</b-col>
-          <b-col cols="3"><b-input v-model="search.address" size="sm" @keyup.enter="tableReload"></b-input></b-col>
-        </b-row>
-        <b-row>
-          <b-col cols="1">행사알림</b-col>
-          <b-col cols="3">
-            <b-select v-model="search.isNotify" size="sm" @keyup.enter="tableReload">
-              <b-select-option :value="null">전체</b-select-option>
-              <b-select-option value="1">수신</b-select-option>
-              <b-select-option value="0">미수신</b-select-option>
-            </b-select>
-          </b-col>
-        </b-row>
-        <b-row class="my-1">
-          <b-col cols="12">
-            <b-button @click="tableReload" size="sm">검색</b-button>
-          </b-col>
-        </b-row>
-      </b-container>
+      <b-row class="my-1">
+        <b-col cols="2">이름</b-col>
+        <b-col cols="3"><b-input v-model="search.name" size="sm" @keyup.enter="tableReload"></b-input></b-col>
+        <b-col cols="2">연락처</b-col>
+        <b-col cols="3"><b-input v-model="search.phone" size="sm" @keyup.enter="tableReload"></b-input></b-col>
+      </b-row>
+      <b-row>
+        <b-col cols="2">주소</b-col>
+        <b-col cols="3"><b-input v-model="search.address" size="sm" @keyup.enter="tableReload"></b-input></b-col>
+        <b-col cols="2">행사알림</b-col>
+        <b-col cols="3">
+          <b-select v-model="search.isNotify" size="sm" @keyup.enter="tableReload">
+            <b-select-option :value="null">전체</b-select-option>
+            <b-select-option value="1">수신</b-select-option>
+            <b-select-option value="0">미수신</b-select-option>
+          </b-select>
+        </b-col>
+      </b-row>
+      <b-row class="my-1">
+        <b-col cols="12">
+          <b-button @click="tableReload" size="sm">검색</b-button>
+        </b-col>
+      </b-row>
     </b-card>
     <div>
       <b-container fluid>
@@ -83,14 +81,14 @@ export default {
       },
       pagination: {
         currentPage: 1,
-        perPage: 10,
+        perPage: 5,
         totalRows: 0,
         isBusy: false
       }
     }
   },
   created () {
-    this.$bus.$emit('SET_MENU_NAVIGATE', [{ text: '고객 관리', to: { path: '/customer' } }])
+    this.$bus.$emit(this.$common.enum.emitMessage.SET_MENU_NAVIGATE, [{ text: '고객 관리', to: { path: '/customer' } }])
   },
   components: {
     'customer-add-modal': CustomerAddModal
@@ -133,10 +131,11 @@ export default {
 
           vm.pagination.totalRows = count
           vm.$db.customerDatastore.find(query)
-            .sort({ createDate: 1 })
+            .sort({ createDate: -1 })
             .skip((vm.pagination.currentPage - 1) * vm.pagination.perPage)
             .limit(vm.pagination.perPage)
             .exec((err, rows) => {
+              console.log(rows)
               if (err) {
                 vm.pagination.isBusy = false
                 reject(err)

@@ -1,17 +1,24 @@
 <template>
   <div>
-    <b-modal id="modal-search-store" size="lg" ok-only ok-title="닫기">
+    <b-modal id="modal-search-store" size="lg" title="지점 검색"
+      header-bg-variant="dark"
+      header-text-variant="light"
+      body-bg-variant="light"
+      body-text-variant="dark"
+      hide-footer>
       <b-container fluid>
         <b-card bg-variant="light" class="my-2">
           <b-container fluid>
             <b-row class="my-1">
               <b-col cols="2">이름</b-col>
-              <b-col><b-input v-model="search.name" @keyup.enter="tableReload"></b-input></b-col>
+              <b-col><b-input v-model="search.name" @keyup.enter="tableReload" size="sm"></b-input></b-col>
             </b-row>
             <b-row class="my-1">
-              <b-col cols="12">
-                <b-button @click="tableReload">검색</b-button>
-                <b-button v-b-modal.modal-add-store variant="success">등록</b-button>
+              <b-col cols="auto" class="mr-auto">
+                <b-button @click="tableReload" size="sm">검색</b-button>
+              </b-col>
+              <b-col cols="auto">
+                <b-button v-b-modal.modal-add-store variant="success" size="sm">등록</b-button>
               </b-col>
             </b-row>
           </b-container>
@@ -34,7 +41,7 @@
         </div>
       </b-container>
     </b-modal>
-    <store-add-modal @store-added="storeAdded"></store-add-modal>
+    <store-add-modal @store-added="storeAdded" :temp-name="search.name"></store-add-modal>
   </div>
 </template>
 
@@ -54,7 +61,7 @@ export default {
       },
       pagination: {
         currentPage: 1,
-        perPage: 10,
+        perPage: 5,
         totalRows: 0,
         isBusy: false
       }
@@ -93,7 +100,7 @@ export default {
 
           vm.pagination.totalRows = count
           vm.$db.storeDatastore.find(query)
-            .sort({ createDate: 1 })
+            .sort({ createDate: -1 })
             .skip((vm.pagination.currentPage - 1) * vm.pagination.perPage)
             .limit(vm.pagination.perPage)
             .exec((err, rows) => {
