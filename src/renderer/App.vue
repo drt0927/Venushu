@@ -9,13 +9,13 @@
     name: 'app',
     mounted () {
       if (!this.$user.isLogin && this.$router.currentRoute.name !== 'user-login') {
-        // this.$router.push({ path: '/user/login' })
+        this.$router.push({ path: '/user/login' })
       }
     },
     watch: {
       $route (to, from) {
         if (!this.$user.isLogin && to.name !== 'user-login' && to.name !== 'user-firstwrite') {
-          // this.$router.push({ path: '/user/login' })
+          this.$router.push({ path: '/user/login' })
         }
       }
     }
