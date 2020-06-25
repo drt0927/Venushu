@@ -42,6 +42,7 @@ export default {
           vm.$common.messageBox.showMessageBox(vm, '오류', '초기화 실패. 오류 : ' + cntErr)
           return
         }
+        vm.$user.storeIdx = row[0]._id
         vm.$user.storeName = row[0].name
         vm.$bus.$emit('LOCAL_LOADED', 'SUCCESS')
       })
