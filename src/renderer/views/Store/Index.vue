@@ -6,7 +6,9 @@
         <b-col cols="3"><b-input v-model="search.name" size="sm" @keyup.enter="tableReload"></b-input></b-col>
       </b-row>
       <b-row class="my-1">
-        <b-col cols="12">
+        <b-col cols="auto" class="mr-auto">
+        </b-col>
+        <b-col cols="auto">
           <b-button @click="tableReload" size="sm">검색</b-button>
         </b-col>
       </b-row>
@@ -93,7 +95,7 @@ export default {
       },
       pagination: {
         currentPage: 1,
-        perPage: 5,
+        perPage: 15,
         totalRows: 0,
         isBusy: false
       },

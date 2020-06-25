@@ -4,9 +4,23 @@
       <b-row class="my-1">
         <b-col cols="2">주문자명</b-col>
         <b-col cols="3"><b-input v-model="search.name" size="sm" @keyup.enter="tableReload"></b-input></b-col>
+        <b-col cols="2">완료</b-col>
+        <b-col cols="3">
+          <b-select v-model="search.isDeliveryEnd" size="sm" @keyup.enter="tableReload">
+            <b-select-option :value="null">전체</b-select-option>
+            <b-select-option :value="true">완료</b-select-option>
+            <b-select-option :value="false">미완료</b-select-option>
+          </b-select>
+        </b-col>
       </b-row>
       <b-row class="my-1">
-        <b-col cols="12">
+        <b-col cols="2">등록일</b-col>
+        <b-col cols="3"><b-datepicker v-model="search.createDate" size="sm" locale="ko" reset-button></b-datepicker></b-col>
+      </b-row>
+      <b-row class="my-1">
+        <b-col cols="auto" class="mr-auto">
+        </b-col>
+        <b-col cols="auto">
           <b-button @click="tableReload" size="sm">검색</b-button>
         </b-col>
       </b-row>
@@ -24,9 +38,6 @@
       :busy.sync="pagination.isBusy"
       :per-page="pagination.perPage"
       :current-page="pagination.currentPage">
-        <!-- <template v-slot:cell(namelink)="data">
-          <router-link :to="`/customer/detail/${data.item.customerId}`">{{ data.item.name }}</router-link>
-        </template> -->
         <template v-slot:cell(action)="data">
           <router-link :to="`/order/detail/${data.item._id}`">상세</router-link>
         </template>
@@ -48,22 +59,21 @@ export default {
   data () {
     return {
       fields: [
+        { key: 'createDate', label: '날짜' },
         { key: 'name', label: '주문자명' },
         { key: 'deliveryStart', label: '출고일' },
         { key: 'deliveryCode', label: '송장번호' },
         { key: 'deliveryEnd', label: '배송 완료' },
-        { key: 'createDate', label: '날짜' },
         { key: 'action', label: '상세' }
       ],
       search: {
         name: '',
-        address: '',
-        productCode: '',
-        size: ''
+        isDeliveryEnd: null,
+        createDate: null
       },
       pagination: {
         currentPage: 1,
-        perPage: 5,
+        perPage: 15,
         totalRows: 0,
         isBusy: false
       }
@@ -84,6 +94,22 @@ export default {
       if (vm.search.name) {
         query.name = new RegExp(vm.search.name)
       }
+
+      if (vm.search.isDeliveryEnd !== null) {
+        if (vm.search.isDeliveryEnd) {
+          query.deliveryEnd = { $ne: null }
+        } else {
+          query.deliveryEnd = { $in: [null] }
+        }
+      }
+
+      if (vm.search.createDate) {
+        query.createDate = {
+          $gte: new Date(vm.$moment(vm.search.createDate).format('YYYY-MM-DD') + ' 00:00:00'),
+          $lte: new Date(vm.$moment(vm.search.createDate).format('YYYY-MM-DD') + ' 23:59:59')
+        }
+      }
+      console.log(query)
 
       return new Promise((resolve, reject) => {
         vm.$db.orderDatastore.count(query, (cntErr, count) => {

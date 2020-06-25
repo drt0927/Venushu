@@ -18,11 +18,11 @@
     </b-row>
     <b-row>
       <b-col cols="auto" class="mr-auto">
-        <b-button variant="success" @click="updateBoard" size="sm">수정</b-button>
-        <b-button @click="goIndex" size="sm">목록</b-button>
+        <b-button variant="danger" @click="deleteBoard" size="sm">삭제</b-button>
       </b-col>
       <b-col cols="auto">
-        <b-button variant="danger" @click="deleteBoard" size="sm">삭제</b-button>
+        <b-button variant="success" @click="updateBoard" size="sm">수정</b-button>
+        <b-button @click="goIndex" size="sm">목록</b-button>
       </b-col>
     </b-row>
   </b-container>

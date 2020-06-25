@@ -11,7 +11,7 @@
             <b-container fluid>
               <b-row>
                 <b-col cols="auto" class="mr-auto" style="padding-left: 0;">최근 공지 5개</b-col>
-                <b-col cols="auto" class=""><router-link to="/board">더보기<b-icon-plus></b-icon-plus></router-link></b-col>
+                <b-col cols="auto" class=""><router-link to="/board/notice">더보기<b-icon-plus></b-icon-plus></router-link></b-col>
               </b-row>
             </b-container>
           </template>

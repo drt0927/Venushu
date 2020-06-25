@@ -21,11 +21,6 @@ export default new Router({
           component: require('@/views/User/User').default,
           children: [
             {
-              path: '',
-              name: 'user-list',
-              component: require('@/views/User/Index').default
-            },
-            {
               path: 'login',
               name: 'user-login',
               component: require('@/views/User/Login').default

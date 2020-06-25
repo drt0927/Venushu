@@ -34,7 +34,7 @@ body {
 }
 
 .table th, .table td {
-  padding: 0.5rem !important;
+  padding: 0.15rem !important;
 }
 
 .table-trade-in, .table-danger>td, .table-danger>th {

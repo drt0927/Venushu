@@ -24,14 +24,14 @@
         <b-container fluid>
           <b-row>
             <b-col cols="auto" class="mr-auto">
+            </b-col>
+            <b-col cols="auto">
               <b-button variant="success" @click="ok()" size="sm">
                 등록
               </b-button>
               <b-button @click="cancel()" size="sm">
                 취소
               </b-button>
-            </b-col>
-            <b-col cols="auto">
             </b-col>
           </b-row>
         </b-container>

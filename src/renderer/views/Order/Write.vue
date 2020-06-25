@@ -66,12 +66,17 @@
           </b-row>
         </div>
       </div>
-      <b-button variant="success" @click="writeOrder" size="sm" class="my-2">
-        등록
-      </b-button>
-      <b-button @click="goIndex" size="sm" class="my-2">
-        취소
-      </b-button>
+      <b-row>
+        <b-col cols="auto" class="mr-auto"></b-col>
+        <b-col cols="auto">
+          <b-button variant="success" @click="writeOrder" size="sm" class="my-2">
+            등록
+          </b-button>
+          <b-button @click="goIndex" size="sm" class="my-2">
+            취소
+          </b-button>
+        </b-col>
+      </b-row>
     </b-container>
     
     <div ref="daum-area" class="daum-layer-background">
@@ -112,6 +117,7 @@ export default {
     customerSelected (item) {
       this.form.name = item.name
       this.form.customerId = item._id
+      this.form.address = item.address
     },
     customerSearch () {
       this.$bvModal.show('modal-search-customer')

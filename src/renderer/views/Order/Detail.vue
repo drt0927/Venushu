@@ -69,11 +69,11 @@
       </div>
       <b-row class="my-2">
         <b-col cols="auto" class="mr-auto">
-          <b-button variant="success" @click="updateOrder" size="sm">수정</b-button>
-          <b-button @click="goIndex" size="sm">목록</b-button>
+          <b-button variant="danger" @click="deleteOrder" size="sm">삭제</b-button>
         </b-col>
         <b-col cols="auto">
-          <b-button variant="danger" @click="deleteOrder" size="sm">삭제</b-button>
+          <b-button variant="success" @click="updateOrder" size="sm">수정</b-button>
+          <b-button @click="goIndex" size="sm">목록</b-button>
         </b-col>
       </b-row>
     </div>
@@ -123,6 +123,7 @@ export default {
     customerSelected (item) {
       this.order.name = item.name
       this.order.customerId = item._id
+      this.order.address = item.address
     },
     customerSearch () {
       this.$bvModal.show('modal-search-customer')

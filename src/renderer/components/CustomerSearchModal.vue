@@ -17,14 +17,20 @@
             </b-row>
             <b-row class="my-1">
               <b-col cols="auto" class="mr-auto">
-                <b-button @click="tableReload" size="sm">검색</b-button>
               </b-col>
               <b-col cols="auto">
-                <b-button v-b-modal.modal-add-customer variant="success" size="sm">등록</b-button>
+                <b-button @click="tableReload" size="sm">검색</b-button>
               </b-col>
             </b-row>
           </b-container>
         </b-card>
+        <b-row>
+          <b-col cols="auto" class="mr-auto">
+          </b-col>
+          <b-col cols="auto">
+            <b-button v-b-modal.modal-add-customer variant="success" size="sm">등록</b-button>
+          </b-col>
+        </b-row>
         <div>
           <b-table id="customer-table" striped sticky-header="500px"
           selectable
@@ -51,11 +57,13 @@
       </b-container>
     </b-modal>
     <customer-add-modal @customer-added="customerAdded" :temp-name="search.name" :temp-phone="search.phone"></customer-add-modal>
+    <customer-address-select-modal @address-selected="customerAddressSelected" :temp-idx="selectedCustomer._id"></customer-address-select-modal>
   </div>
 </template>
 
 <script>
 import CustomerAddModal from './CustomerAddModal'
+import CustomerAddressSelectModal from './CustomerAddressSelectModal'
 
 export default {
   data () {
@@ -69,24 +77,53 @@ export default {
       ],
       search: {
         name: '',
-        phone: ''
+        phone: '',
+        idx: ''
+      },
+      selectedCustomer: {
+        _id: '',
+        name: '',
+        address: ''
       },
       pagination: {
         currentPage: 1,
-        perPage: 5,
+        perPage: 15,
         totalRows: 0,
         isBusy: false
       }
     }
   },
   components: {
-    'customer-add-modal': CustomerAddModal
+    'customer-add-modal': CustomerAddModal,
+    'customer-address-select-modal': CustomerAddressSelectModal
   },
   methods: {
+    customerAddressSelected (address) {
+      this.selectedCustomer.address = address
+      this.$emit('row-selected', this.selectedCustomer)
+      this.$bvModal.hide('modal-selected-customer-address')
+      this.$bvModal.hide('modal-search-customer')
+    },
     onRowSelected (items) {
       if (items.length > 0) {
-        this.$emit('row-selected', items[0])
-        this.$bvModal.hide('modal-search-customer')
+        this.selectedCustomer._id = items[0]._id
+        this.selectedCustomer.name = items[0].name
+        let cnt = 0
+        if (items[0].address1) {
+          cnt += 1
+        }
+        if (items[0].address2) {
+          cnt += 1
+        }
+        if (items[0].address3) {
+          cnt += 1
+        }
+        if (cnt > 0) {
+          this.customerAddressSelected(items[0].address1)
+        }
+        if (cnt > 1) {
+          this.$bvModal.show('modal-selected-customer-address')
+        }
       }
     },
     tableReload () {

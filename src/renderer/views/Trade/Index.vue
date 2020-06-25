@@ -26,7 +26,9 @@
         <b-col cols="3"><b-input v-model="search.storeText" size="sm" @keyup.enter="tableReload"></b-input></b-col>
       </b-row>
       <b-row class="my-1">
-        <b-col cols="12">
+        <b-col cols="auto" class="mr-auto">
+        </b-col>
+        <b-col cols="auto">
           <b-button @click="tableReload" size="sm">검색</b-button>
         </b-col>
       </b-row>
@@ -115,14 +117,14 @@
         <b-container fluid>
           <b-row>
             <b-col cols="auto" class="mr-auto">
+            </b-col>
+            <b-col cols="auto">
               <b-button variant="success" @click="ok()" size="sm">
                 등록
               </b-button>
               <b-button @click="cancel()" size="sm">
                 취소
               </b-button>
-            </b-col>
-            <b-col cols="auto">
             </b-col>
           </b-row>
         </b-container>
@@ -177,14 +179,14 @@
         <b-container fluid>
           <b-row>
             <b-col cols="auto" class="mr-auto">
+            </b-col>
+            <b-col cols="auto">
               <b-button variant="success" @click="ok()" size="sm">
                 수정
               </b-button>
               <b-button @click="cancel()" size="sm">
                 취소
               </b-button>
-            </b-col>
-            <b-col cols="auto">
             </b-col>
           </b-row>
         </b-container>
@@ -229,7 +231,7 @@ export default {
       },
       pagination: {
         currentPage: 1,
-        perPage: 5,
+        perPage: 15,
         totalRows: 0,
         isBusy: false
       }

@@ -51,6 +51,8 @@
         <b-container fluid>
           <b-row>
             <b-col cols="auto" class="mr-auto">
+            </b-col>
+            <b-col cols="auto">
               <b-button variant="success" @click="ok()" size="sm">
                 등록
               </b-button>
@@ -58,7 +60,6 @@
                 취소
               </b-button>
             </b-col>
-            <b-col cols="auto"></b-col>
           </b-row>
         </b-container>
       </template>
@@ -86,7 +87,7 @@ export default {
       },
       pagination: {
         currentPage: 1,
-        perPage: 5,
+        perPage: 15,
         totalRows: 0,
         isBusy: false
       }

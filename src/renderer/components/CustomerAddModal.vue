@@ -61,6 +61,8 @@
         <b-container fluid>
           <b-row>
             <b-col cols="auto" class="mr-auto">
+            </b-col>
+            <b-col cols="auto">
               <b-button variant="success" size="sm" @click="ok()">
                 등록
               </b-button>
@@ -68,7 +70,6 @@
                 취소
               </b-button>
             </b-col>
-            <b-col cols="auto"></b-col>
           </b-row>
         </b-container>
       </template>

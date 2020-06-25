@@ -58,16 +58,16 @@
         <b-container fluid>
           <b-row>
             <b-col cols="auto" class="mr-auto">
+              <b-button v-show="form._id" variant="danger" size="sm" @click="deleteSchedule">
+                삭제
+              </b-button>
+            </b-col>
+            <b-col cols="auto">
               <b-button variant="success" @click="ok()" size="sm">
                 {{ okButtonText }}
               </b-button>
               <b-button variant="secondary" @click="cancel()" size="sm">
                 취소
-              </b-button>
-            </b-col>
-            <b-col cols="auto">
-              <b-button v-show="form._id" variant="danger" size="sm" @click="deleteSchedule">
-                삭제
               </b-button>
             </b-col>
           </b-row>

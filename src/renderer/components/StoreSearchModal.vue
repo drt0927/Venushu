@@ -15,14 +15,20 @@
             </b-row>
             <b-row class="my-1">
               <b-col cols="auto" class="mr-auto">
+              </b-col>
+              <b-col cols="auto">
                 <b-button @click="tableReload" size="sm">검색</b-button>
+              </b-col>
+            </b-row>
+          </b-container>
+        </b-card>
+        <b-row class="my-1">
+              <b-col cols="auto" class="mr-auto">
               </b-col>
               <b-col cols="auto">
                 <b-button v-b-modal.modal-add-store variant="success" size="sm">등록</b-button>
               </b-col>
             </b-row>
-          </b-container>
-        </b-card>
         <div>
           <b-table id="store-search-table" striped sticky-header="500px"
           selectable
@@ -61,7 +67,7 @@ export default {
       },
       pagination: {
         currentPage: 1,
-        perPage: 5,
+        perPage: 15,
         totalRows: 0,
         isBusy: false
       }

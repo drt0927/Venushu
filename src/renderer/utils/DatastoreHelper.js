@@ -1,7 +1,7 @@
 export default {
   pagination: {
     currentPage: 1,
-    perPage: 5,
+    perPage: 15,
     totalRows: 0,
     isBusy: false
   },
