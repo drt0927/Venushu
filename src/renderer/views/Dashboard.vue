@@ -61,12 +61,22 @@
               </b-row>
             </b-container>
           </template>
-          <template v-slot:cell(deliveryStart)="data">
+          <template v-slot:cell(productCodes)="row">
+            <ul style="margin-bottom:0; padding-left:0;">
+              <li v-for="product in row.item.products" v-bind:key="product.code" style="display:block;">
+                {{product.code}} ({{product.count}}) - {{product.description}}
+              </li>
+            </ul>
+          </template>
+          <template v-slot:cell(createDate)="data">
+            {{ $moment(data.value).format('YYYY-MM-DD (dd)') }}
+          </template>
+          <!-- <template v-slot:cell(deliveryStart)="data">
             {{ data.value ? $moment(data.value).format('YYYY-MM-DD') : "" }}
           </template>
           <template v-slot:cell(deliveryEnd)="data">
             {{ data.value ? $moment(data.value).format('YYYY-MM-DD') : "" }}
-          </template>
+          </template> -->
         </b-table>
       </b-col>
       <b-col>
@@ -83,11 +93,11 @@
               </b-row>
             </b-container>
           </template>
+          <template v-slot:cell(inOutDate)="data">
+            {{ $moment(data.value).format('YYYY-MM-DD') }}
+          </template>
           <template v-slot:cell(inOutText)="data">
             {{ data.item.inOut === 10 ? "입고" : "출고" }}
-          </template>
-          <template v-slot:cell(isConfirm)="data">
-            <b-check v-model="data.value" disabled></b-check>
           </template>
         </b-table>
       </b-col>
@@ -100,9 +110,9 @@ export default {
   data () {
     return {
       boardFields: [
+        { key: 'createDate', label: '작성일' },
         { key: 'titlelink', label: '제목' },
-        { key: 'typeText', label: '게시판' },
-        { key: 'createDate', label: '작성일' }
+        { key: 'typeText', label: '게시판' }
       ],
       scheduleFields: [
         { key: 'title', label: '제목' },
@@ -110,16 +120,15 @@ export default {
         { key: 'end', label: '종료' }
       ],
       orderFields: [
+        { key: 'createDate', label: '날짜' },
         { key: 'name', label: '주문자' },
-        { key: 'deliveryStart', label: '출고' },
-        { key: 'deliveryCode', label: '송장' },
-        { key: 'deliveryEnd', label: '완료' }
+        { key: 'productCodes', label: '품번' }
       ],
       tradeFields: [
+        { key: 'inOutDate', label: '날짜' },
         { key: 'productCode', label: '품번' },
         { key: 'count', label: '수량' },
         { key: 'storeText', label: '매장' },
-        { key: 'isConfirm', label: '확정' },
         { key: 'inOutText', label: '구분' }
       ]
     }
@@ -150,7 +159,7 @@ export default {
       const vm = this
       return new Promise((resolve, reject) => {
         vm.$db.scheduleDatastore.find({})
-          .sort({ createDate: -1 })
+          .sort({ start: -1 })
           .skip(0 * 5)
           .limit(5)
           .exec((err, rows) => {
@@ -164,7 +173,9 @@ export default {
     readOrder () {
       const vm = this
       return new Promise((resolve, reject) => {
-        vm.$db.orderDatastore.find({})
+        vm.$db.orderDatastore.find({
+          deliveryEnd: { $in: [null] }
+        })
           .sort({ createDate: -1 })
           .skip(0 * 5)
           .limit(5)
@@ -179,7 +190,9 @@ export default {
     readTrade () {
       const vm = this
       return new Promise((resolve, reject) => {
-        vm.$db.tradeDatastore.find({})
+        vm.$db.tradeDatastore.find({
+          isConfirm: false
+        })
           .sort({ createDate: -1 })
           .skip(0 * 5)
           .limit(5)

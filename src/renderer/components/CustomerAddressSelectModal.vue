@@ -66,7 +66,6 @@ export default {
         if (err || row.length < 1) {
           vm.$bvModal.hide('modal-selected-customer-address')
         }
-        console.log(row)
         vm.address1 = row[0].address1
         vm.address2 = row[0].address2
         vm.address3 = row[0].address3

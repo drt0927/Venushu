@@ -19,11 +19,17 @@
           </b-select>
         </b-col>
       </b-row>
-      <b-row>
+      <b-row class="my-1">
         <b-col cols="2">품번</b-col>
         <b-col cols="3"><b-input v-model="search.productCode" size="sm" @keyup.enter="tableReload"></b-input></b-col>
         <b-col cols="2">매장</b-col>
         <b-col cols="3"><b-input v-model="search.storeText" size="sm" @keyup.enter="tableReload"></b-input></b-col>
+      </b-row>
+      <b-row class="my-1">
+        <b-col cols="2">날짜 검색 (시작)</b-col>
+        <b-col cols="3"><b-datepicker v-model="search.inOutDateStart" size="sm" locale="ko" reset-button></b-datepicker></b-col>
+        <b-col cols="2">날짜 검색 (종료)</b-col>
+        <b-col cols="3"><b-datepicker v-model="search.inOutDateEnd" size="sm" locale="ko" reset-button></b-datepicker></b-col>
       </b-row>
       <b-row class="my-1">
         <b-col cols="auto" class="mr-auto">
@@ -46,9 +52,9 @@
       :busy.sync="pagination.isBusy"
       :per-page="pagination.perPage"
       :current-page="pagination.currentPage">
-      <template v-slot:cell(createDate)="data">
+      <!-- <template v-slot:cell(createDate)="data">
         {{ $moment(data.value).format('YYYY-MM-DD') }}
-      </template>
+      </template> -->
       <template v-slot:cell(inOutDate)="data">
         {{ $moment(data.value).format('YYYY-MM-DD') }}
       </template>
@@ -94,7 +100,7 @@
               </b-input-group-append>
             </b-input-group>
           </b-col>
-          <b-col cols="1">입/출고일</b-col>
+          <b-col cols="1">날짜</b-col>
           <b-col><b-datepicker ref="in-out-date" v-model="form.inOutDate" size="sm" locale="ko"></b-datepicker></b-col>
         </b-row>
         <b-row>
@@ -105,7 +111,7 @@
               <b-select-option :value="20">출고</b-select-option>
             </b-select>
           </b-col>
-          <b-col cols="1">확정처리</b-col>
+          <b-col cols="1">확정</b-col>
           <b-col><b-check ref="is-confirm" v-model="form.isConfirm"></b-check></b-col>
         </b-row>
         <b-row class="mb-1">
@@ -156,7 +162,7 @@
               </b-input-group-append>
             </b-input-group>
           </b-col>
-          <b-col cols="1">입/출고일</b-col>
+          <b-col cols="1">날짜</b-col>
           <b-col><b-datepicker ref="in-out-date" v-model="trade.inOutDate" size="sm" locale="ko"></b-datepicker></b-col>
         </b-row>
         <b-row>
@@ -167,7 +173,7 @@
               <b-select-option :value="20">출고</b-select-option>
             </b-select>
           </b-col>
-          <b-col cols="1">확정처리</b-col>
+          <b-col cols="1">확정</b-col>
           <b-col><b-check ref="is-confirm" v-model="trade.isConfirm"></b-check></b-col>
         </b-row>
         <b-row class="mb-1">
@@ -179,6 +185,9 @@
         <b-container fluid>
           <b-row>
             <b-col cols="auto" class="mr-auto">
+              <b-button variant="danger" @click="deleteTrade" size="sm">
+                삭제
+              </b-button>
             </b-col>
             <b-col cols="auto">
               <b-button variant="success" @click="ok()" size="sm">
@@ -214,20 +223,22 @@ export default {
       },
       trade: {},
       fields: [
-        { key: 'createDate', label: '등록일' },
+        // { key: 'createDate', label: '등록일' },
+        { key: 'inOutDate', label: '날짜' },
         { key: 'productCode', label: '품번' },
         { key: 'count', label: '수량' },
         { key: 'storeText', label: '매장' },
-        { key: 'inOutDate', label: '입/출고일' },
         { key: 'inOut', label: '구분' },
-        { key: 'isConfirm', label: '확정처리' },
+        { key: 'isConfirm', label: '확정' },
         { key: 'btnModify', label: '수정' }
       ],
       search: {
         inOut: null,
         storeText: '',
         productCode: '',
-        isConfirm: null
+        isConfirm: null,
+        inOutDateStart: null,
+        inOutDateEnd: null
       },
       pagination: {
         currentPage: 1,
@@ -263,6 +274,24 @@ export default {
         })
       })
     },
+    deleteTrade () {
+      const vm = this
+      vm.$common.messageBox.showConfirmBox(vm, '확인', '정말로 삭제하시겠습니까?', '삭제', '취소', 'danger')
+        .then((value) => {
+          if (value) {
+            vm.$db.tradeDatastore.remove({ _id: vm.trade._id }, {}, function (err, numRemoved) {
+              if (err) {
+                vm.$common.messageBox.showMessageBox(vm, '오류', '삭제에 실패 하였습니다. 오류 : ' + err)
+                return
+              }
+              vm.$common.messageBox.showMessageBox(vm, '성공', '수평이동이 삭제되었습니다.').then((value) => {
+                vm.$bvModal.hide('modal-modify-trade')
+                vm.$root.$emit('bv::refresh::table', 'trade-table')
+              })
+            })
+          }
+        })
+    },
     writeTrade (modalEvt) {
       const vm = this
       if (!vm.checkValidation()) {
@@ -293,8 +322,13 @@ export default {
       this.$bvModal.show('modal-search-store')
     },
     storeSelected (item) {
-      this.form.storeText = item.name
-      this.form.storeId = item._id
+      if (this.trade._id) {
+        this.trade.storeText = item.name
+        this.trade.storeId = item._id
+      } else {
+        this.form.storeText = item.name
+        this.form.storeId = item._id
+      }
     },
     checkValidation () {
       const vm = this
@@ -345,19 +379,39 @@ export default {
       const vm = this
       let query = {}
       vm.pagination.isBusy = true
+
+      query.$and = []
       if (vm.search.inOut) {
-        query.inOut = vm.search.inOut
+        query.$and.push({
+          inOut: vm.search.inOut
+        })
       }
       if (vm.search.storeText) {
-        query.storeText = new RegExp(vm.search.storeText)
+        query.$and.push({
+          storeText: new RegExp(vm.search.storeText)
+        })
       }
       if (vm.search.productCode) {
-        query.productCode = new RegExp(vm.search.productCode)
+        query.$and.push({
+          productCode: new RegExp(vm.search.productCode)
+        })
       }
-      if (vm.search.isConfirm) {
-        query.isConfirm = vm.search.isConfirm
+      if (vm.search.isConfirm !== null) {
+        query.$and.push({
+          isConfirm: vm.search.isConfirm
+        })
       }
-
+      if (vm.search.inOutDateStart) {
+        query.$and.push({
+          inOutDate: { $gte: vm.$moment(vm.search.inOutDateStart + ' 00:00:00')._d }
+        })
+      }
+      if (vm.search.inOutDateEnd) {
+        query.$and.push({
+          inOutDate: { $lte: vm.$moment(vm.search.inOutDateEnd + ' 23:59:59')._d }
+        })
+      }
+      console.log(query)
       return new Promise((resolve, reject) => {
         vm.$db.tradeDatastore.count(query, (cntErr, count) => {
           if (cntErr) {

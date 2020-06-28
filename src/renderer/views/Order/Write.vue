@@ -47,22 +47,18 @@
         </b-row>
         <div style="border:1px solid lightgray; padding: 10px;">
           <b-row class="mb-1">
-            <b-col style="text-align:center;">품번</b-col>
-            <b-col style="text-align:center;">색상</b-col>
-            <b-col style="text-align:center;">사이즈</b-col>
-            <b-col style="text-align:center;">수량</b-col>
-            <b-col style="text-align:center;">금액(단가)</b-col>
-            <b-col style="text-align:center;"></b-col>
+            <b-col cols="3" style="text-align:center;">품번</b-col>
+            <b-col cols="1" style="text-align:center;">수량</b-col>
+            <b-col style="text-align:center;">비고</b-col>
+            <b-col cols="1" style="text-align:center;"></b-col>
           </b-row>
         </div>
         <div v-for="(item, index) in form.products" v-bind:key="index" style="border:1px solid lightgray; border-top: none; padding: 10px;">
           <b-row class="mb-1">
-            <b-col><b-input ref="product-code" v-model="item.code" size="sm" @keyup.shift.enter="addProduct"></b-input></b-col>
-            <b-col><b-input ref="product-color" v-model="item.color" size="sm" @keyup.shift.enter="addProduct"></b-input></b-col>
-            <b-col><b-input ref="product-size" v-model="item.size" size="sm" @keyup.shift.enter="addProduct"></b-input></b-col>
-            <b-col><b-input ref="product-count" type="number" v-model="item.count" size="sm" @keyup.shift.enter="addProduct"></b-input></b-col>
-            <b-col><b-input ref="product-amt" type="number" v-model="item.amt" size="sm" @keyup.shift.enter="addProduct"></b-input></b-col>
-            <b-col><b-button size="sm"><b-icon-cart-dash @click="removeProduct(index)"></b-icon-cart-dash></b-button></b-col>
+            <b-col cols="3"><b-input ref="product-code" v-model="item.code" size="sm" @keyup.shift.enter="addProduct"></b-input></b-col>
+            <b-col cols="1"><b-input ref="product-count" type="number" v-model="item.count" size="sm" @keyup.shift.enter="addProduct"></b-input></b-col>
+            <b-col><b-input ref="product-description" v-model="item.description" size="sm" @keyup.shift.enter="addProduct"></b-input></b-col>
+            <b-col cols="1"><b-button size="sm"><b-icon-cart-dash @click="removeProduct(index)"></b-icon-cart-dash></b-button></b-col>
           </b-row>
         </div>
       </div>
@@ -160,7 +156,10 @@ export default {
           vm.$common.messageBox.showMessageBox(vm, '성공', '주문장이 생성 되었습니다.').then((value) => {
             vm.goIndex()
           })
+          return
         }
+
+        vm.$common.messageBox.showMessageBox(vm, '성공', '주문장 생성에 실패 하였습니다. 오류 : ' + err)
         vm.clearOrderForm()
         vm.$bvModal.hide('modal-add-order')
       })
@@ -222,12 +221,11 @@ export default {
       return true
     },
     addProduct () {
+      console.log('test')
       this.form.products.push({
         code: '',
-        size: '',
         count: 0,
-        amt: 0,
-        color: ''
+        description: ''
       })
     },
     removeProduct (index) {

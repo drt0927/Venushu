@@ -118,10 +118,13 @@ export default {
         if (items[0].address3) {
           cnt += 1
         }
-        if (cnt > 0) {
+
+        if (cnt === 0) {
+          this.$emit('row-selected', this.selectedCustomer)
+          this.$bvModal.hide('modal-search-customer')
+        } else if (cnt > 0) {
           this.customerAddressSelected(items[0].address1)
-        }
-        if (cnt > 1) {
+        } else if (cnt > 1) {
           this.$bvModal.show('modal-selected-customer-address')
         }
       }

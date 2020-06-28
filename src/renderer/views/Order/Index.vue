@@ -41,6 +41,13 @@
         <template v-slot:cell(action)="data">
           <router-link :to="`/order/detail/${data.item._id}`">상세</router-link>
         </template>
+        <template v-slot:cell(productCodes)="row">
+          <ul style="margin-bottom:0; padding-left:0;">
+            <li v-for="product in row.item.products" v-bind:key="product.code" style="display:block;">
+              {{product.code}} ({{product.count}}) - {{product.description}}
+            </li>
+          </ul>
+        </template>
         <template v-slot:cell(createDate)="data">
           {{ $moment(data.value).format('YYYY-MM-DD (dd)') }}
         </template>
@@ -61,9 +68,10 @@ export default {
       fields: [
         { key: 'createDate', label: '날짜' },
         { key: 'name', label: '주문자명' },
+        { key: 'productCodes', label: '품번' },
         { key: 'deliveryStart', label: '출고일' },
-        { key: 'deliveryCode', label: '송장번호' },
-        { key: 'deliveryEnd', label: '배송 완료' },
+        // { key: 'deliveryCode', label: '송장번호' },
+        // { key: 'deliveryEnd', label: '배송 완료' },
         { key: 'action', label: '상세' }
       ],
       search: {

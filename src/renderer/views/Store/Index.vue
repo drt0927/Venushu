@@ -61,14 +61,17 @@
         <b-container fluid>
           <b-row>
             <b-col cols="auto" class="mr-auto">
+              <b-button variant="danger" @click="deleteStore" size="sm">
+                삭제
+              </b-button>
+            </b-col>
+            <b-col cols="auto">
               <b-button variant="success" @click="ok()" size="sm">
                 수정
               </b-button>
               <b-button @click="cancel()" size="sm">
                 취소
               </b-button>
-            </b-col>
-            <b-col cols="auto">
             </b-col>
           </b-row>
         </b-container>
@@ -154,6 +157,24 @@ export default {
     },
     tableReload () {
       this.$root.$emit('bv::refresh::table', 'store-table')
+    },
+    deleteStore () {
+      const vm = this
+      vm.$common.messageBox.showConfirmBox(vm, '확인', '정말로 삭제하시겠습니까?', '삭제', '취소', 'danger')
+        .then((value) => {
+          if (value) {
+            vm.$db.storeDatastore.remove({ _id: vm.store._id }, {}, function (err, numRemoved) {
+              if (err) {
+                vm.$common.messageBox.showMessageBox(vm, '오류', '삭제에 실패 하였습니다. 오류 : ' + err)
+                return
+              }
+              vm.$common.messageBox.showMessageBox(vm, '성공', '지점이 삭제되었습니다.').then((value) => {
+                vm.$bvModal.hide('modal-modify-store')
+                vm.$root.$emit('bv::refresh::table', 'store-table')
+              })
+            })
+          }
+        })
     },
     readStore () {
       const vm = this
