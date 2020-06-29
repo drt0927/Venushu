@@ -2,85 +2,89 @@
   <b-container fluid>
     <b-row>
       <b-col>
-        <!-- 최근 공지 5개 -->
-        <b-table striped sticky-header="500px"
-        caption-top
-        :items="readBoard"
-        :fields="boardFields">
-          <template v-slot:table-caption>
-            <b-container fluid>
-              <b-row>
-                <b-col cols="auto" class="mr-auto" style="padding-left: 0;">최근 공지 5개</b-col>
-                <b-col cols="auto" class=""><router-link to="/board/notice">더보기<b-icon-plus></b-icon-plus></router-link></b-col>
-              </b-row>
-            </b-container>
-          </template>
-          <template v-slot:cell(titlelink)="data">
-            <router-link :to="`/board/detail/${data.item._id}`">{{ data.item.title }}</router-link>
-          </template>
-          <template v-slot:cell(createDate)="data">
-            {{ $moment(data.value).format('YYYY-MM-DD') }}
-          </template>
-        </b-table>
+        <b-row>
+          <b-col>
+            <!-- 최근 공지 5개 -->
+            <b-table striped sticky-header="500px"
+            caption-top
+            :items="readBoard"
+            :fields="boardFields">
+              <template v-slot:table-caption>
+                <b-container fluid>
+                  <b-row>
+                    <b-col cols="auto" class="mr-auto" style="padding-left: 0;">최근 공지 5개</b-col>
+                    <b-col cols="auto" class=""><router-link to="/board/notice">더보기<b-icon-plus></b-icon-plus></router-link></b-col>
+                  </b-row>
+                </b-container>
+              </template>
+              <template v-slot:cell(titlelink)="data">
+                <router-link :to="`/board/detail/${data.item._id}`">{{ data.item.title }}</router-link>
+              </template>
+              <template v-slot:cell(createDate)="data">
+                {{ $moment(data.value).format('YYYY-MM-DD') }}
+              </template>
+            </b-table>
+          </b-col>
+        </b-row>
+        <b-row>
+          <b-col>
+            <!-- 오늘 일정 5개 -->
+            <b-table striped sticky-header="500px"
+            caption-top
+            :items="readSchedule"
+            :fields="scheduleFields">
+              <template v-slot:table-caption>
+                <b-container fluid>
+                  <b-row>
+                    <b-col cols="auto" class="mr-auto" style="padding-left: 0;">최근 일정 5개</b-col>
+                    <b-col cols="auto" class=""><router-link to="/schedule">더보기<b-icon-plus></b-icon-plus></router-link></b-col>
+                  </b-row>
+                </b-container>
+              </template>
+              <template v-slot:cell(start)="data">
+                {{ $moment(data.value).format('YYYY-MM-DD') }}
+              </template>
+              <template v-slot:cell(end)="data">
+                {{ $moment(data.value).format('YYYY-MM-DD') }}
+              </template>
+            </b-table>
+          </b-col>
+        </b-row>
       </b-col>
       <b-col>
-        <!-- 오늘 일정 5개 -->
-        <b-table striped sticky-header="500px"
-        caption-top
-        :items="readSchedule"
-        :fields="scheduleFields">
-          <template v-slot:table-caption>
-            <b-container fluid>
-              <b-row>
-                <b-col cols="auto" class="mr-auto" style="padding-left: 0;">최근 일정 5개</b-col>
-                <b-col cols="auto" class=""><router-link to="/schedule">더보기<b-icon-plus></b-icon-plus></router-link></b-col>
-              </b-row>
-            </b-container>
-          </template>
-          <template v-slot:cell(start)="data">
-            {{ $moment(data.value).format('YYYY-MM-DD') }}
-          </template>
-          <template v-slot:cell(end)="data">
-            {{ $moment(data.value).format('YYYY-MM-DD') }}
-          </template>
-        </b-table>
+        <b-row>
+          <b-col>
+            <!-- 최근 주문장 5개 -->
+            <b-table striped sticky-header="500px"
+            caption-top
+            :items="readOrder"
+            :fields="orderFields">
+              <template v-slot:table-caption>
+                <b-container fluid>
+                  <b-row>
+                    <b-col cols="auto" class="mr-auto" style="padding-left: 0;">최근 주문장 10개</b-col>
+                    <b-col cols="auto" class=""><router-link to="/order">더보기<b-icon-plus></b-icon-plus></router-link></b-col>
+                  </b-row>
+                </b-container>
+              </template>
+              <template v-slot:cell(productCodes)="row">
+                <ul style="margin-bottom:0; padding-left:0;">
+                  <li v-for="product in row.item.products" v-bind:key="product.code" style="display:block;">
+                    {{product.code}} ({{product.count}}) - {{product.description}}
+                  </li>
+                </ul>
+              </template>
+              <template v-slot:cell(createDate)="data">
+                {{ $moment(data.value).format('YYYY-MM-DD (dd)') }}
+              </template>
+            </b-table>
+          </b-col>
+        </b-row>
       </b-col>
     </b-row>
-    <b-row>
+    <!-- 오늘 수평 이동 5개 -->
+    <!-- <b-row>
       <b-col>
-        <!-- 최근 주문장 5개 -->
-        <b-table striped sticky-header="500px"
-        caption-top
-        :items="readOrder"
-        :fields="orderFields">
-          <template v-slot:table-caption>
-            <b-container fluid>
-              <b-row>
-                <b-col cols="auto" class="mr-auto" style="padding-left: 0;">최근 주문장 5개</b-col>
-                <b-col cols="auto" class=""><router-link to="/order">더보기<b-icon-plus></b-icon-plus></router-link></b-col>
-              </b-row>
-            </b-container>
-          </template>
-          <template v-slot:cell(productCodes)="row">
-            <ul style="margin-bottom:0; padding-left:0;">
-              <li v-for="product in row.item.products" v-bind:key="product.code" style="display:block;">
-                {{product.code}} ({{product.count}}) - {{product.description}}
-              </li>
-            </ul>
-          </template>
-          <template v-slot:cell(createDate)="data">
-            {{ $moment(data.value).format('YYYY-MM-DD (dd)') }}
-          </template>
-          <!-- <template v-slot:cell(deliveryStart)="data">
-            {{ data.value ? $moment(data.value).format('YYYY-MM-DD') : "" }}
-          </template>
-          <template v-slot:cell(deliveryEnd)="data">
-            {{ data.value ? $moment(data.value).format('YYYY-MM-DD') : "" }}
-          </template> -->
-        </b-table>
-      </b-col>
-      <b-col>
-        <!-- 오늘 수평 이동 5개 -->
         <b-table sticky-header="500px"
         caption-top
         :items="readTrade"
@@ -101,7 +105,7 @@
           </template>
         </b-table>
       </b-col>
-    </b-row>
+    </b-row> -->
   </b-container>
 </template>
 
@@ -178,35 +182,35 @@ export default {
         })
           .sort({ createDate: -1 })
           .skip(0 * 5)
-          .limit(5)
+          .limit(10)
           .exec((err, rows) => {
             if (err) {
               reject(err)
             }
-            resolve(rows)
-          })
-      })
-    },
-    readTrade () {
-      const vm = this
-      return new Promise((resolve, reject) => {
-        vm.$db.tradeDatastore.find({
-          isConfirm: false
-        })
-          .sort({ createDate: -1 })
-          .skip(0 * 5)
-          .limit(5)
-          .exec((err, rows) => {
-            if (err) {
-              reject(err)
-            }
-            rows.forEach(row => {
-              row._rowVariant = row.isConfirm ? '' : row.inOut === 10 ? 'trade-in' : 'trade-out'
-            })
             resolve(rows)
           })
       })
     }
+    // readTrade () {
+    //   const vm = this
+    //   return new Promise((resolve, reject) => {
+    //     vm.$db.tradeDatastore.find({
+    //       isConfirm: false
+    //     })
+    //       .sort({ createDate: -1 })
+    //       .skip(0 * 5)
+    //       .limit(5)
+    //       .exec((err, rows) => {
+    //         if (err) {
+    //           reject(err)
+    //         }
+    //         rows.forEach(row => {
+    //           row._rowVariant = row.isConfirm ? '' : row.inOut === 10 ? 'trade-in' : 'trade-out'
+    //         })
+    //         resolve(rows)
+    //       })
+    //   })
+    // }
   }
 }
 </script>

@@ -37,6 +37,8 @@
         <b-row class="mb-1">
           <b-col cols="3">작성자</b-col>
           <b-col><b-input v-model="form.name" size="sm" disabled></b-input></b-col>
+          <b-col cols="3">공지</b-col>
+          <b-col><b-check v-model="form.isNotice" size="sm"></b-check></b-col>
         </b-row>
         <b-row class="mb-1">
           <b-col cols="3">제목</b-col>
@@ -85,11 +87,21 @@ export default {
         userId: this.$user.idx,
         title: '',
         contents: '',
+        isNotice: false,
         createDate: null
       },
+      sort: {
+        createDate: -1
+      },
       search: {
-        type: this.$route.params.type,
-        title: ''
+        title: {
+          value: '',
+          exp: 'like'
+        },
+        type: {
+          value: this.$route.params.type,
+          exp: 'eq'
+        }
       },
       query: new Query(this.$db.boardDatastore)
     }
@@ -120,23 +132,6 @@ export default {
         .catch((err) => {
           vm.$common.messageBox.showMessageBox(vm, '오류', '생성에 실패 하였습니다. 오류 : ' + err)
         })
-
-      // vm.$db.boardDatastore.insert({
-      //   type: vm.$route.params.type,
-      //   typeText: typeText,
-      //   name: vm.$user.name,
-      //   userId: vm.$user.idx,
-      //   title: vm.form.title,
-      //   contents: vm.form.contents,
-      //   createDate: new Date()
-      // },
-      // function (err) {
-      //   if (!err) {
-      //     vm.tableReload()
-      //   }
-      //   vm.clearBoardForm()
-      //   vm.$bvModal.hide('modal-add-customer')
-      // })
     },
     checkValidation () {
       const vm = this
@@ -166,24 +161,12 @@ export default {
     tableReload () {
       this.$root.$emit('bv::refresh::table', 'board-table')
     },
-    readBoard () {
+    readBoard (ctx, callback) {
       const vm = this
-      return new Promise((resolve, reject) => {
-        vm.query.setSort({
-          createDate: -1
-        })
-        vm.query.addQuery({
-          type: vm.search.type
-        })
-        vm.query.addQuery({
-          title: new RegExp(vm.search.title)
-        })
-        vm.query.count()
-          .then(vm.query.find)
-          .then((result) => {
-            resolve(result.data)
-          })
-      })
+      vm.query.setSort(vm.sort)
+        .setQuery(vm.search)
+        .count()
+        .find(callback)
     }
   }
 }

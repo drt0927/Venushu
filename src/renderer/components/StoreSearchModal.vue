@@ -80,6 +80,7 @@ export default {
     onRowSelected (items) {
       if (items.length > 0) {
         this.$emit('row-selected', items[0])
+        this.search.name = ''
         this.$bvModal.hide('modal-search-store')
       }
     },

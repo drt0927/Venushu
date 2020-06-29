@@ -17,37 +17,36 @@ export default class Query {
 
   setSort (s) {
     this.sort = s
+    return this
   }
 
-  addQuery (q) {
+  setQuery (q) {
     for (let key in q) {
-      if (q[key] === null || q[key] === 'undefined') {
-        return
+      if (q[key].exp === 'like') {
+        let temp = {}
+        temp[key] = new RegExp(q[key].value)
+        this.query.$and.push(temp)
+      } else if (q[key].exp === 'eq') {
+        let temp = {}
+        temp[key] = q[key].value
+        this.query.$and.push(temp)
       }
     }
 
-    if (q !== null && q !== 'undefined') {
-      this.query.$and.push(q)
-    }
+    return this
   }
 
-  count (result) {
-    const _self = this || result.self
-    return new Promise((resolve, reject) => {
-      _self.datastore.count(_self.query, (cntErr, count) => {
-        if (cntErr) {
-          _self.pagination.isBusy = false
-          reject(cntErr)
-          return
-        }
-        _self.pagination.totalRows = count
-        _self.pagination.isBusy = false
-        resolve({
-          self: _self,
-          data: count
-        })
-      })
+  count () {
+    this.datastore.count(this.query, (cntErr, count) => {
+      if (cntErr) {
+        this.pagination.isBusy = false
+        return
+      }
+      this.pagination.totalRows = count
+      this.pagination.isBusy = false
     })
+
+    return this
   }
 
   findOne (id, result) {
@@ -66,26 +65,22 @@ export default class Query {
     })
   }
 
-  find (result) {
-    const _self = this || result.self
-    return new Promise((resolve, reject) => {
-      _self.datastore.find(_self.query)
-        .sort(_self.sort)
-        .skip((_self.pagination.currentPage - 1) * _self.pagination.perPage)
-        .limit(_self.pagination.perPage)
-        .exec((err, rows) => {
-          if (err) {
-            _self.pagination.isBusy = false
-            reject(err)
-            return
-          }
-          _self.pagination.isBusy = false
-          resolve({
-            self: _self,
-            data: rows
-          })
-        })
-    })
+  find (callback) {
+    this.datastore.find(this.query)
+      .sort(this.sort)
+      .skip((this.pagination.currentPage - 1) * this.pagination.perPage)
+      .limit(this.pagination.perPage)
+      .exec((err, rows) => {
+        if (err) {
+          this.pagination.isBusy = false
+          callback()
+          return
+        }
+        this.pagination.isBusy = false
+        console.log(rows)
+        callback(rows)
+      })
+    return this
   }
 
   update (id, item, result) {

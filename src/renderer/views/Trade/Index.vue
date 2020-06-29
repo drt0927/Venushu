@@ -411,7 +411,7 @@ export default {
           inOutDate: { $lte: vm.$moment(vm.search.inOutDateEnd + ' 23:59:59')._d }
         })
       }
-      console.log(query)
+
       return new Promise((resolve, reject) => {
         vm.$db.tradeDatastore.count(query, (cntErr, count) => {
           if (cntErr) {

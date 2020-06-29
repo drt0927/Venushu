@@ -194,7 +194,7 @@ export default {
 
           vm.pagination.totalRows = count
           vm.$db.storeDatastore.find(query)
-            .sort({ createDate: -1 })
+            .sort({ name: 1 })
             .skip((vm.pagination.currentPage - 1) * vm.pagination.perPage)
             .limit(vm.pagination.perPage)
             .exec((err, rows) => {
