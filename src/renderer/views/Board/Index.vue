@@ -79,9 +79,13 @@ export default {
         { key: 'createDate', label: '작성일' }
       ],
       form: {
+        type: this.$route.params.type,
+        typeText: '',
         name: this.$user.name,
+        userId: this.$user.idx,
         title: '',
-        contents: ''
+        contents: '',
+        createDate: null
       },
       search: {
         type: this.$route.params.type,
@@ -105,23 +109,34 @@ export default {
       if (vm.$route.params.type === 'notice') {
         typeText = '공지사항'
       }
-
-      vm.$db.boardDatastore.insert({
-        type: vm.$route.params.type,
-        typeText: typeText,
-        name: vm.$user.name,
-        userId: vm.$user.idx,
-        title: vm.form.title,
-        contents: vm.form.contents,
-        createDate: new Date()
-      },
-      function (err) {
-        if (!err) {
+      vm.form.typeText = typeText
+      vm.form.createDate = new Date()
+      vm.query.insert(vm.form)
+        .then(() => {
           vm.tableReload()
-        }
-        vm.clearBoardForm()
-        vm.$bvModal.hide('modal-add-customer')
-      })
+          vm.clearBoardForm()
+          vm.$bvModal.hide('modal-add-customer')
+        })
+        .catch((err) => {
+          vm.$common.messageBox.showMessageBox(vm, '오류', '생성에 실패 하였습니다. 오류 : ' + err)
+        })
+
+      // vm.$db.boardDatastore.insert({
+      //   type: vm.$route.params.type,
+      //   typeText: typeText,
+      //   name: vm.$user.name,
+      //   userId: vm.$user.idx,
+      //   title: vm.form.title,
+      //   contents: vm.form.contents,
+      //   createDate: new Date()
+      // },
+      // function (err) {
+      //   if (!err) {
+      //     vm.tableReload()
+      //   }
+      //   vm.clearBoardForm()
+      //   vm.$bvModal.hide('modal-add-customer')
+      // })
     },
     checkValidation () {
       const vm = this

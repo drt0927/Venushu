@@ -50,8 +50,8 @@ export default class Query {
     })
   }
 
-  findOne (id) {
-    const _self = this || self
+  findOne (id, result) {
+    const _self = this || result.self
     return new Promise((resolve, reject) => {
       _self.datastore.find({ _id: id }, (err, row) => {
         if (err || row.length < 1) {
@@ -88,8 +88,8 @@ export default class Query {
     })
   }
 
-  update (id, item) {
-    const _self = this || self
+  update (id, item, result) {
+    const _self = this || result.self
     return new Promise((resolve, reject) => {
       _self.datastore.update({ _id: id }, { $set: item }, {}, function (err, i) {
         if (err) {
@@ -104,8 +104,8 @@ export default class Query {
     })
   }
 
-  remove (id) {
-    const _self = this || self
+  remove (id, result) {
+    const _self = this || result.self
     return new Promise((resolve, reject) => {
       _self.datastore.remove({ _id: id }, {}, function (err, numRemoved) {
         if (err) {
@@ -120,8 +120,8 @@ export default class Query {
     })
   }
 
-  insert (item) {
-    const _self = this || self
+  insert (item, result) {
+    const _self = this || result.self
     return new Promise((resolve, reject) => {
       _self.datastore.insert(item, function (err) {
         if (err) {
