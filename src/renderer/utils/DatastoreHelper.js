@@ -1,77 +1,137 @@
-export default {
-  pagination: {
-    currentPage: 1,
-    perPage: 15,
-    totalRows: 0,
-    isBusy: false
-  },
-  findOne (datastore, id) {
+'use strict'
+
+export default class Query {
+  constructor (ds) {
+    this.datastore = ds
+    this.query = {
+      $and: []
+    }
+    this.pagination = {
+      currentPage: 1,
+      perPage: 15,
+      totalRows: 0,
+      isBusy: false
+    }
+    this.sort = {}
+  }
+
+  setSort (s) {
+    this.sort = s
+  }
+
+  addQuery (q) {
+    for (let key in q) {
+      if (q[key] === null || q[key] === 'undefined') {
+        return
+      }
+    }
+
+    if (q !== null && q !== 'undefined') {
+      this.query.$and.push(q)
+    }
+  }
+
+  count (result) {
+    const _self = this || result.self
     return new Promise((resolve, reject) => {
-      datastore.find({ _id: id }, (err, row) => {
+      _self.datastore.count(_self.query, (cntErr, count) => {
+        if (cntErr) {
+          _self.pagination.isBusy = false
+          reject(cntErr)
+          return
+        }
+        _self.pagination.totalRows = count
+        _self.pagination.isBusy = false
+        resolve({
+          self: _self,
+          data: count
+        })
+      })
+    })
+  }
+
+  findOne (id) {
+    const _self = this || self
+    return new Promise((resolve, reject) => {
+      _self.datastore.find({ _id: id }, (err, row) => {
         if (err || row.length < 1) {
           reject(err)
           return
         }
-        resolve(row[0])
+        resolve({
+          self: _self,
+          data: row[0]
+        })
       })
     })
-  },
-  find (datastore, query) {
-    const p = this
-    return new Promise((resolve, reject) => {
-      datastore.count(query, (cntErr, count) => {
-        if (cntErr) {
-          p.pagination.isBusy = false
-          reject(cntErr)
-        }
+  }
 
-        p.pagination.totalRows = count
-        datastore.find(query)
-          .sort({ createDate: -1 })
-          .skip((p.pagination.currentPage - 1) * p.pagination.perPage)
-          .limit(p.pagination.perPage)
-          .exec((err, rows) => {
-            if (err) {
-              p.pagination.isBusy = false
-              reject(err)
-              return
-            }
-            p.pagination.isBusy = false
-            resolve(rows)
+  find (result) {
+    const _self = this || result.self
+    return new Promise((resolve, reject) => {
+      _self.datastore.find(_self.query)
+        .sort(_self.sort)
+        .skip((_self.pagination.currentPage - 1) * _self.pagination.perPage)
+        .limit(_self.pagination.perPage)
+        .exec((err, rows) => {
+          if (err) {
+            _self.pagination.isBusy = false
+            reject(err)
+            return
+          }
+          _self.pagination.isBusy = false
+          resolve({
+            self: _self,
+            data: rows
           })
-      })
+        })
     })
-  },
-  update (datastore, id, item) {
+  }
+
+  update (id, item) {
+    const _self = this || self
     return new Promise((resolve, reject) => {
-      datastore.update({ _id: id }, { $set: item }, {}, function (err, i) {
+      _self.datastore.update({ _id: id }, { $set: item }, {}, function (err, i) {
         if (err) {
           reject(err)
           return
         }
-        resolve(i)
+        resolve({
+          self: _self,
+          data: i
+        })
       })
     })
-  },
-  remove (datastore, id) {
+  }
+
+  remove (id) {
+    const _self = this || self
     return new Promise((resolve, reject) => {
-      datastore.remove({ _id: id }, {}, function (err, numRemoved) {
+      _self.datastore.remove({ _id: id }, {}, function (err, numRemoved) {
         if (err) {
           reject(err)
           return
         }
-        resolve(numRemoved)
+        resolve({
+          self: _self,
+          data: numRemoved
+        })
       })
     })
-  },
-  insert (datastore, item) {
+  }
+
+  insert (item) {
+    const _self = this || self
     return new Promise((resolve, reject) => {
-      datastore.insert(item, function (err) {
+      _self.datastore.insert(item, function (err) {
         if (err) {
           reject(err)
           return
         }
-        resolve([])
+        resolve({
+          self: _self,
+          data: []
+        })
       })
     })
   }

@@ -2,16 +2,16 @@
   <b-container fluid>
       <b-container fluid>
         <b-row>
-          <b-col cols="auto" class="mr-auto p-1"><span>개수 : {{ pagination.totalRows }} </span></b-col>
+          <b-col cols="auto" class="mr-auto p-1"><span>개수 : {{ query.pagination.totalRows }} </span></b-col>
           <b-col cols="auto" class="p-1"><b-button v-b-modal.modal-add-board size="sm" variant="success">등록</b-button></b-col>
         </b-row>
       </b-container>
       <b-table id="board-table" striped sticky-header="500px"
       :items="readBoard"
       :fields="fields"
-      :busy.sync="pagination.isBusy"
-      :per-page="pagination.perPage"
-      :current-page="pagination.currentPage">
+      :busy.sync="query.pagination.isBusy"
+      :per-page="query.pagination.perPage"
+      :current-page="query.pagination.currentPage">
         <template v-slot:cell(titlelink)="data">
           <router-link :to="`/board/detail/${data.item._id}`">{{ data.item.title }}</router-link>
         </template>
@@ -19,9 +19,9 @@
           {{ $moment(data.value).format('YYYY-MM-DD HH:mm:ss') }}
         </template>
       </b-table>
-      <b-pagination v-model="pagination.currentPage" 
-      :total-rows="pagination.totalRows"
-      :per-page="pagination.perPage"
+      <b-pagination v-model="query.pagination.currentPage" 
+      :total-rows="query.pagination.totalRows"
+      :per-page="query.pagination.perPage"
       aria-controls="board-table"
       ></b-pagination>
 
@@ -68,6 +68,8 @@
 </template>
 
 <script>
+import Query from '../../utils/DatastoreHelper.js'
+
 export default {
   data () {
     return {
@@ -85,12 +87,7 @@ export default {
         type: this.$route.params.type,
         title: ''
       },
-      pagination: {
-        currentPage: 1,
-        perPage: 15,
-        totalRows: 0,
-        isBusy: false
-      }
+      query: new Query(this.$db.boardDatastore)
     }
   },
   created () {
@@ -156,35 +153,21 @@ export default {
     },
     readBoard () {
       const vm = this
-      let query = {}
-      vm.pagination.isBusy = true
-
-      query.type = vm.search.type
-      if (vm.search.title) {
-        query.title = new RegExp(vm.search.title)
-      }
-
       return new Promise((resolve, reject) => {
-        vm.$db.boardDatastore.count(query, (cntErr, count) => {
-          if (cntErr) {
-            vm.pagination.isBusy = false
-            reject(cntErr)
-          }
-
-          vm.pagination.totalRows = count
-          vm.$db.boardDatastore.find(query)
-            .sort({ createDate: -1 })
-            .skip((vm.pagination.currentPage - 1) * vm.pagination.perPage)
-            .limit(vm.pagination.perPage)
-            .exec((err, rows) => {
-              if (err) {
-                vm.pagination.isBusy = false
-                reject(err)
-              }
-              vm.pagination.isBusy = false
-              resolve(rows)
-            })
+        vm.query.setSort({
+          createDate: -1
         })
+        vm.query.addQuery({
+          type: vm.search.type
+        })
+        vm.query.addQuery({
+          title: new RegExp(vm.search.title)
+        })
+        vm.query.count()
+          .then(vm.query.find)
+          .then((result) => {
+            resolve(result.data)
+          })
       })
     }
   }

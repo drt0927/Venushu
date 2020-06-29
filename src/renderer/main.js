@@ -11,7 +11,6 @@ import common from './utils/Common'
 import VueDaumPostcode from 'vue-daum-postcode'
 import moment from 'moment'
 import EventBus from './utils/EventBus'
-import DatastoreHelper from './utils/DatastoreHelper'
 
 if (!process.env.IS_WEB) Vue.use(require('vue-electron'))
 Vue.http = Vue.prototype.$http = axios
@@ -39,7 +38,6 @@ Vue.prototype.$user = {
   storeName: ''
 }
 Vue.prototype.$bus = EventBus
-Vue.prototype.$dbHelper = DatastoreHelper
 
 Vue.use(BootstrapVue)
 Vue.use(IconsPlugin)
