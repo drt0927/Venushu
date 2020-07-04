@@ -5,16 +5,15 @@ import App from './App'
 import router from './router'
 import store from './store'
 import { boardDatastore, customerDatastore, orderDatastore, scheduleDatastore, storeDatastore, userDatastore, localDatastore, tradeDatastore } from './datastore'
-import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
 import crypto from './utils/Crypto'
 import common from './utils/Common'
 import VueDaumPostcode from 'vue-daum-postcode'
 import moment from 'moment'
 import EventBus from './utils/EventBus'
+import Vuesax from 'vuesax'
 
 if (!process.env.IS_WEB) Vue.use(require('vue-electron'))
 Vue.http = Vue.prototype.$http = axios
-Vue.config.productionTip = false
 
 Vue.prototype.$crypto = crypto
 Vue.prototype.$common = common
@@ -39,8 +38,7 @@ Vue.prototype.$user = {
 }
 Vue.prototype.$bus = EventBus
 
-Vue.use(BootstrapVue)
-Vue.use(IconsPlugin)
+Vue.use(Vuesax)
 Vue.use(VueDaumPostcode)
 
 /* eslint-disable no-new */

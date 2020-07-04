@@ -32,6 +32,14 @@
   src: url('~@/assets/Minguk-Regular.woff');
 }
 
+html, body {
+  height: 100%;
+}
+
+#app {
+  height: 100%;
+}
+
 body {
   font-family: 'Minguk-Regular' !important;
   font-size: 0.8rem !important;

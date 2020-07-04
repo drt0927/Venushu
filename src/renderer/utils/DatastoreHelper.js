@@ -13,6 +13,7 @@ export default class Query {
       isBusy: false
     }
     this.sort = {}
+    this.data = []
   }
 
   setSort (s) {
@@ -77,7 +78,6 @@ export default class Query {
           return
         }
         this.pagination.isBusy = false
-        console.log(rows)
         callback(rows)
       })
     return this
