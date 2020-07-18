@@ -3,7 +3,7 @@
 export default class Query {
   constructor (ds) {
     this.datastore = ds
-    this.query = {
+    this.filter = {
       $and: []
     }
     this.pagination = {
@@ -20,24 +20,29 @@ export default class Query {
     return this
   }
 
-  setQuery (q) {
+  setFilter (q) {
+    this.filter.$and = []
     for (let key in q) {
       if (q[key].exp === 'like') {
         let temp = {}
         temp[key] = new RegExp(q[key].value)
-        this.query.$and.push(temp)
+        this.filter.$and.push(temp)
       } else if (q[key].exp === 'eq') {
         let temp = {}
         temp[key] = q[key].value
-        this.query.$and.push(temp)
+        this.filter.$and.push(temp)
       }
     }
 
     return this
   }
 
+  getCount () {
+    return this.pagination.totalRows
+  }
+
   count () {
-    this.datastore.count(this.query, (cntErr, count) => {
+    this.datastore.count(this.filter, (cntErr, count) => {
       if (cntErr) {
         this.pagination.isBusy = false
         return
@@ -49,24 +54,20 @@ export default class Query {
     return this
   }
 
-  findOne (id, result) {
-    const _self = this || result.self
-    return new Promise((resolve, reject) => {
-      _self.datastore.find({ _id: id }, (err, row) => {
-        if (err || row.length < 1) {
-          reject(err)
-          return
-        }
-        resolve({
-          self: _self,
-          data: row[0]
-        })
-      })
+  findOne (id, callback) {
+    this.datastore.find({ _id: id }, (err, row) => {
+      if (err || row.length < 1) {
+        callback()
+        return
+      }
+      callback(row[0])
     })
+
+    return this
   }
 
   find (callback) {
-    this.datastore.find(this.query)
+    this.datastore.find(this.filter)
       .sort(this.sort)
       .skip((this.pagination.currentPage - 1) * this.pagination.perPage)
       .limit(this.pagination.perPage)
@@ -77,57 +78,45 @@ export default class Query {
           return
         }
         this.pagination.isBusy = false
-        console.log(rows)
         callback(rows)
       })
+
     return this
   }
 
-  update (id, item, result) {
-    const _self = this || result.self
-    return new Promise((resolve, reject) => {
-      _self.datastore.update({ _id: id }, { $set: item }, {}, function (err, i) {
-        if (err) {
-          reject(err)
-          return
-        }
-        resolve({
-          self: _self,
-          data: i
-        })
-      })
+  update (id, item, callback) {
+    this.datastore.update({ _id: id }, { $set: item }, {}, function (err, i) {
+      if (err) {
+        callback()
+        return
+      }
+      callback(i)
     })
+
+    return this
   }
 
-  remove (id, result) {
-    const _self = this || result.self
-    return new Promise((resolve, reject) => {
-      _self.datastore.remove({ _id: id }, {}, function (err, numRemoved) {
-        if (err) {
-          reject(err)
-          return
-        }
-        resolve({
-          self: _self,
-          data: numRemoved
-        })
-      })
+  remove (id, callback) {
+    this.datastore.remove({ _id: id }, {}, function (err, numRemoved) {
+      if (err) {
+        callback()
+        return
+      }
+      callback(numRemoved)
     })
+
+    return this
   }
 
-  insert (item, result) {
-    const _self = this || result.self
-    return new Promise((resolve, reject) => {
-      _self.datastore.insert(item, function (err) {
-        if (err) {
-          reject(err)
-          return
-        }
-        resolve({
-          self: _self,
-          data: []
-        })
-      })
+  insert (item, callback) {
+    this.datastore.insert(item, function (err, newDoc) {
+      if (err) {
+        callback()
+        return
+      }
+      callback(newDoc)
     })
+
+    return this
   }
 }

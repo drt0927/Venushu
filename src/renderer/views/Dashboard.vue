@@ -20,6 +20,9 @@
               <template v-slot:cell(titlelink)="data">
                 <router-link :to="`/board/detail/${data.item._id}`">{{ data.item.title }}</router-link>
               </template>
+              <template v-slot:cell(isNotice)="data">
+                <b-check disabled v-model="data.value"></b-check>
+              </template>
               <template v-slot:cell(createDate)="data">
                 {{ $moment(data.value).format('YYYY-MM-DD') }}
               </template>
@@ -116,7 +119,7 @@ export default {
       boardFields: [
         { key: 'createDate', label: '작성일' },
         { key: 'titlelink', label: '제목' },
-        { key: 'typeText', label: '게시판' }
+        { key: 'isNotice', label: '공지사항' }
       ],
       scheduleFields: [
         { key: 'title', label: '제목' },
@@ -148,7 +151,10 @@ export default {
       const vm = this
       return new Promise((resolve, reject) => {
         vm.$db.boardDatastore.find({})
-          .sort({ createDate: -1 })
+          .sort({
+            isNotice: -1,
+            createDate: -1
+          })
           .skip(0 * 5)
           .limit(5)
           .exec((err, rows) => {

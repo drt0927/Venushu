@@ -6,7 +6,7 @@
         <b-col cols="3"><b-input v-model="search.name" size="sm" @keyup.enter="tableReload"></b-input></b-col>
         <b-col cols="2">완료</b-col>
         <b-col cols="3">
-          <b-select v-model="search.isDeliveryEnd" size="sm" @keyup.enter="tableReload">
+          <b-select v-model="search.isDeliveryEnd" size="sm" @keyup.enter="tableReload" @change="tableReload">
             <b-select-option :value="null">전체</b-select-option>
             <b-select-option :value="true">완료</b-select-option>
             <b-select-option :value="false">미완료</b-select-option>
@@ -16,6 +16,15 @@
       <b-row class="my-1">
         <b-col cols="2">등록일</b-col>
         <b-col cols="3"><b-datepicker v-model="search.createDate" size="sm" locale="ko" reset-button></b-datepicker></b-col>
+        <b-col cols="2">구분</b-col>
+        <b-col cols="3">
+          <b-select v-model="search.type" size="sm" @keyup.enter="tableReload" @change="tableReload">
+            <b-select-option :value="null">전체</b-select-option>
+            <b-select-option value="offline">매장</b-select-option>
+            <b-select-option value="naver">네이버</b-select-option>
+            <b-select-option value="lotte">롯데</b-select-option>
+          </b-select>
+        </b-col>
       </b-row>
       <b-row class="my-1">
         <b-col cols="auto" class="mr-auto">
@@ -42,11 +51,21 @@
           <router-link :to="`/order/detail/${data.item._id}`">상세</router-link>
         </template>
         <template v-slot:cell(productCodes)="row">
+          <a v-show="row.item.deliveryComp && row.item.deliveryCode" 
+          :href="'https://tracker.delivery/#/' + row.item.deliveryComp + '/' + row.item.deliveryCode" target="_blank">
+          배송조회 ({{ row.item.deliveryComp === 'kr.logen' ? '로젠' :
+                      row.item.deliveryComp === 'kr.lotte' ? '롯데' : '' }})
+          </a>
           <ul style="margin-bottom:0; padding-left:0;">
             <li v-for="product in row.item.products" v-bind:key="product.code" style="display:block;">
-              {{product.code}} ({{product.count}}) - {{product.description}}
+              {{product.code}} ({{product.count}}) - {{product.description}} 
             </li>
           </ul>
+        </template>
+        <template v-slot:cell(type)="data">
+          <b v-show="data.value === 'offline'" style="">매장</b>
+          <b v-show="data.value === 'naver'" style="color:#19CE60">네이버</b>
+          <b v-show="data.value === 'lotte'" style="color:#E30613">롯데</b>
         </template>
         <template v-slot:cell(createDate)="data">
           {{ $moment(data.value).format('YYYY-MM-DD (dd)') }}
@@ -72,12 +91,14 @@ export default {
         { key: 'deliveryStart', label: '출고일' },
         // { key: 'deliveryCode', label: '송장번호' },
         // { key: 'deliveryEnd', label: '배송 완료' },
+        { key: 'type', label: '구분' },
         { key: 'action', label: '상세' }
       ],
       search: {
         name: '',
         isDeliveryEnd: null,
-        createDate: null
+        createDate: null,
+        type: null
       },
       pagination: {
         currentPage: 1,
@@ -111,13 +132,17 @@ export default {
         }
       }
 
+      if (vm.search.type !== null) {
+        query.type = vm.search.type
+      }
+
       if (vm.search.createDate) {
         query.createDate = {
           $gte: new Date(vm.$moment(vm.search.createDate).format('YYYY-MM-DD') + ' 00:00:00'),
           $lte: new Date(vm.$moment(vm.search.createDate).format('YYYY-MM-DD') + ' 23:59:59')
         }
       }
-      console.log(query)
+      console.log(query, vm.search)
 
       return new Promise((resolve, reject) => {
         vm.$db.orderDatastore.count(query, (cntErr, count) => {

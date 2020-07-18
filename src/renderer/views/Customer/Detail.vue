@@ -9,7 +9,7 @@
           <b-input v-model="phone" size="sm" disabled></b-input>
           <b-input-group-append>
             <b-button variant="outline-warning" size="sm" v-b-modal.modal-update-phone>변경</b-button>
-            <b-button variant="outline-primary" size="sm" v-b-modal.modal-open-phone>조회</b-button>
+            <!-- <b-button variant="outline-primary" size="sm" v-b-modal.modal-open-phone>조회</b-button> -->
           </b-input-group-append>
         </b-input-group>
       </b-col>
@@ -165,7 +165,8 @@ export default {
   },
   computed: {
     phone () {
-      return this.$common.masking.phone(this.$crypto.decrypt(this.customer.phone))
+      // return this.$common.masking.phone(this.$crypto.decrypt(this.customer.phone))
+      return this.$crypto.decrypt(this.customer.phone)
     },
     createDate () {
       return this.$moment(this.customer.createDate).format('YYYY-MM-DD HH:mm:ss')

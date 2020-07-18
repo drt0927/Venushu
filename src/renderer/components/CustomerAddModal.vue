@@ -127,6 +127,25 @@ export default {
         return
       }
 
+      vm.$db.customerDatastore.find({
+        phone: vm.$crypto.encrypt(vm.form.phone),
+        name: vm.form.name
+      })
+        .exec((err, rows) => {
+          if (!err && rows.length > 0) {
+            vm.$common.messageBox.showConfirmBox(vm, '확인', '이름, 연락처가 동일한 고객이 있습니다. 추가 하시겠습니까?', '확인', '취소', 'warnning')
+              .then((d) => {
+                if (d) {
+                  vm.insert()
+                }
+              })
+          } else {
+            vm.insert()
+          }
+        })
+    },
+    insert () {
+      const vm = this
       vm.$db.customerDatastore.insert({
         name: vm.form.name,
         phone: vm.$crypto.encrypt(vm.form.phone),

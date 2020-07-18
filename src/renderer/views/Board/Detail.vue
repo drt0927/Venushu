@@ -5,8 +5,8 @@
       <b-col cols="3"><b-input v-model="board.name" size="sm" disabled></b-input></b-col>
       <b-col>작성일</b-col>
       <b-col cols="3"><b-input v-model="createDate" size="sm" disabled></b-input></b-col>
-      <b-col>게시판</b-col>
-      <b-col cols="3"><b-input v-model="board.typeText" size="sm" disabled></b-input></b-col>
+      <b-col>공지여부</b-col>
+      <b-col cols="3"><b-check v-model="board.isNotice" size="sm"></b-check></b-col>
     </b-row>
     <b-row class="my-2">
       <b-col cols="1">제목</b-col>
@@ -29,13 +29,17 @@
 </template>
 
 <script>
+import Query from '../../utils/DatastoreHelper'
+
 export default {
   data () {
     return {
-      board: {}
+      board: {},
+      query: new Query(this.$db.boardDatastore)
     }
   },
   created () {
+    this.$db.boardDatastore.test()
     this.$bus.$emit(this.$common.enum.emitMessage.SET_MENU_NAVIGATE, [{ text: '공지사항', to: { path: '/board/notice' } }, { text: '상세' }])
   },
   computed: {
@@ -45,22 +49,26 @@ export default {
   },
   mounted () {
     const vm = this
-    vm.$db.boardDatastore.find({ _id: this.$route.params.id }, (err, row) => {
-      if (err || row.length < 1) {
+    vm.query.findOne(this.$route.params.id, (result) => {
+      if (!result) {
         vm.goIndex()
+        return
       }
-      vm.board = row[0]
+
+      vm.board = result
     })
   },
   methods: {
     goIndex () {
-      this.$router.push({ path: '/board/notice' })
+      this.$router.push({ path: '/board' })
     },
     deleteBoard () {
       const vm = this
       vm.$common.messageBox.showConfirmBox(vm, '확인', '정말로 삭제하시겠습니까?', '삭제', '취소', 'danger')
         .then((value) => {
           if (value) {
+            // vm.query.remove(vm.$route.params.id, () => {
+            // })
             vm.$db.boardDatastore.remove({ _id: vm.$route.params.id }, {}, function (err, numRemoved) {
               if (err) {
                 vm.$common.messageBox.showMessageBox(vm, '오류', '삭제에 실패 하였습니다. 오류 : ' + err)

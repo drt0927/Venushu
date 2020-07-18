@@ -28,12 +28,32 @@
         </b-col>
       </b-row>
       <b-row class="my-2">
+        <b-col cols="1">연락처</b-col>
+        <b-col><b-input v-model="customer.phone" size="sm" disabled></b-input></b-col>
+        <b-col cols="1">구분</b-col>
+        <b-col cols="3">
+          <b-select v-model="order.type" size="sm">
+            <b-select-option value="offline">매장</b-select-option>
+            <b-select-option value="naver">네이버</b-select-option>
+            <b-select-option value="lotte">롯데</b-select-option>
+          </b-select>
+        </b-col>
+        <b-col cols="1">배송 완료</b-col>
+        <b-col><b-datepicker v-model="order.deliveryEnd" size="sm" locale="ko"></b-datepicker></b-col>
+      </b-row>
+      <b-row class="my-2">
         <b-col cols="1">출고일</b-col>
         <b-col><b-datepicker v-model="order.deliveryStart" size="sm" locale="ko"></b-datepicker></b-col>
         <b-col cols="1">송장번호</b-col>
         <b-col><b-input v-model="order.deliveryCode" size="sm" @keyup.enter="writeOrder"></b-input></b-col>
-        <b-col cols="1">배송 완료</b-col>
-        <b-col><b-datepicker v-model="order.deliveryEnd" size="sm" locale="ko"></b-datepicker></b-col>
+        <b-col cols="1">배송업체</b-col>
+        <b-col cols="3">
+          <b-select v-model="order.deliveryComp" size="sm">
+            <b-select-option value="">기타</b-select-option>
+            <b-select-option value="kr.logen">로젠</b-select-option>
+            <b-select-option value="kr.lotte">롯데</b-select-option>
+          </b-select>
+        </b-col>
       </b-row>
       <b-row class="my-2">
         <b-col cols="1">설명</b-col>
@@ -89,7 +109,10 @@ import CustomerSearchModal from '../../components/CustomerSearchModal'
 export default {
   data () {
     return {
-      order: {}
+      order: {},
+      customer: {
+        phone: ''
+      }
     }
   },
   created () {
@@ -113,6 +136,12 @@ export default {
         vm.goIndex()
       }
       vm.order = row[0]
+
+      vm.$db.customerDatastore.find({ _id: vm.order.customerId }, (errc, rowc) => {
+        if (rowc.length > 0) {
+          vm.customer.phone = vm.$crypto.decrypt(rowc[0].phone)
+        }
+      })
     })
   },
   methods: {

@@ -12,7 +12,7 @@
         <b-col cols="3"><b-input v-model="search.address" size="sm" @keyup.enter="tableReload"></b-input></b-col>
         <b-col cols="2">행사알림</b-col>
         <b-col cols="3">
-          <b-select v-model="search.isNotify" size="sm" @keyup.enter="tableReload">
+          <b-select v-model="search.isNotify" size="sm" @keyup.enter="tableReload" @change="tableReload">
             <b-select-option :value="null">전체</b-select-option>
             <b-select-option value="1">수신</b-select-option>
             <b-select-option value="0">미수신</b-select-option>
@@ -136,7 +136,6 @@ export default {
             .skip((vm.pagination.currentPage - 1) * vm.pagination.perPage)
             .limit(vm.pagination.perPage)
             .exec((err, rows) => {
-              console.log(rows)
               if (err) {
                 vm.pagination.isBusy = false
                 reject(err)

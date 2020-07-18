@@ -1,6 +1,7 @@
 <template>
   <div>
     <b-modal id="modal-search-customer" size="lg" title="고객 조회" ok-only ok-title="닫기"
+      @hidden="modalHidden"
       header-bg-variant="dark"
       header-text-variant="light"
       body-bg-variant="light"
@@ -98,6 +99,11 @@ export default {
     'customer-address-select-modal': CustomerAddressSelectModal
   },
   methods: {
+    modalHidden () {
+      this.search.name = ''
+      this.search.phone = ''
+      this.search.idx = ''
+    },
     customerAddressSelected (address) {
       this.selectedCustomer.address = address
       this.$emit('row-selected', this.selectedCustomer)

@@ -1,7 +1,7 @@
 <template>
   <div>
     <b-modal id="modal-selected-customer-address" ref="modal" title="고객 주소 선택" size="lg"
-      @shown="modalShown"
+      @shown="modalShown" @hidden="modalHidden"
       header-bg-variant="dark"
       header-text-variant="light"
       body-bg-variant="light"
@@ -59,6 +59,11 @@ export default {
   methods: {
     selectedAddress (addr) {
       this.$emit('address-selected', this[addr])
+    },
+    modalHidden () {
+      this.address1 = ''
+      this.address2 = ''
+      this.address3 = ''
     },
     modalShown () {
       const vm = this

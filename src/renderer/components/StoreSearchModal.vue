@@ -1,6 +1,7 @@
 <template>
   <div>
     <b-modal id="modal-search-store" size="lg" title="지점 검색"
+      @hidden="modalHidden"
       header-bg-variant="dark"
       header-text-variant="light"
       body-bg-variant="light"
@@ -77,6 +78,9 @@ export default {
     'store-add-modal': StoreAddModal
   },
   methods: {
+    modalHidden () {
+      this.search.name = ''
+    },
     onRowSelected (items) {
       if (items.length > 0) {
         this.$emit('row-selected', items[0])

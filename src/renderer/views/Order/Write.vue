@@ -25,19 +25,39 @@
           </b-col>
         </b-row>
         <b-row class="mb-1">
+          <b-col cols="1"></b-col>
+          <b-col cols="3">
+          </b-col>
+          <b-col cols="1">구분</b-col>
+          <b-col cols="3">
+            <b-select v-model="form.type" size="sm">
+              <b-select-option value="offline">매장</b-select-option>
+              <b-select-option value="naver">네이버</b-select-option>
+              <b-select-option value="lotte">롯데</b-select-option>
+            </b-select>
+          </b-col>
+          <b-col cols="1">배송 완료</b-col>
+          <b-col cols="3"><b-datepicker v-model="form.deliveryEnd" size="sm" locale="ko"></b-datepicker></b-col>
+        </b-row>
+        <b-row class="mb-1">
           <b-col cols="1">출고일</b-col>
           <b-col><b-datepicker v-model="form.deliveryStart" size="sm" locale="ko"></b-datepicker></b-col>
           <b-col cols="1">송장번호</b-col>
           <b-col><b-input v-model="form.deliveryCode" size="sm" @keyup.enter="writeOrder"></b-input></b-col>
-          <b-col cols="1">배송 완료</b-col>
-          <b-col><b-datepicker v-model="form.deliveryEnd" size="sm" locale="ko"></b-datepicker></b-col>
+          <b-col cols="1">배송업체</b-col>
+          <b-col>
+            <b-select v-model="form.deliveryComp" size="sm">
+              <b-select-option value="">기타</b-select-option>
+              <b-select-option value="kr.logen">로젠</b-select-option>
+              <b-select-option value="kr.lotte">롯데</b-select-option>
+            </b-select>
+          </b-col>
         </b-row>
         <b-row class="mb-1">
           <b-col cols="1">설명</b-col>
           <b-col><b-input v-model="form.description" size="sm" @keyup.enter="writeOrder"></b-input></b-col>
         </b-row>
       </div>
-      
       <div>
         <b-row>
           <b-col cols="auto" class="mr-auto"><h4>상품등록</h4></b-col>
@@ -99,7 +119,15 @@ export default {
         address: '',
         description: '',
         deliveryCode: '',
-        products: []
+        type: 'offline',
+        deliveryComp: '',
+        products: [
+          {
+            code: '',
+            count: 1,
+            description: ''
+          }
+        ]
       }
     }
   },
@@ -149,6 +177,8 @@ export default {
         description: vm.form.description,
         deliveryCode: vm.form.deliveryCode,
         products: vm.form.products,
+        type: vm.form.type,
+        deliveryComp: vm.form.deliveryComp,
         createDate: new Date()
       },
       (err) => {
@@ -175,7 +205,13 @@ export default {
       this.address = ''
       this.description = ''
       this.deliveryCode = ''
-      this.products = []
+      this.products = [
+        {
+          code: '',
+          count: 1,
+          description: ''
+        }
+      ]
     },
     modalShown () {
       this.$refs.name.$el.focus()
@@ -224,7 +260,7 @@ export default {
       console.log('test')
       this.form.products.push({
         code: '',
-        count: 0,
+        count: 1,
         description: ''
       })
     },

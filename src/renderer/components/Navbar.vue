@@ -14,7 +14,7 @@
         <b-nav-item to="/trade">수평이동</b-nav-item>
         <b-nav-item to="/store">지점관리</b-nav-item>
         <b-nav-item to="/schedule">일정관리</b-nav-item>
-        <b-nav-item to="/board/notice">공지사항</b-nav-item>
+        <b-nav-item to="/board">게시판</b-nav-item>
       </b-navbar-nav>
       <!-- Right aligned nav items -->
       <b-navbar-nav class="ml-auto">

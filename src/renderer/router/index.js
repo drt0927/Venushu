@@ -94,7 +94,7 @@ export default new Router({
           component: require('@/views/Board/Board').default,
           children: [
             {
-              path: ':type',
+              path: '',
               name: 'board-list',
               component: require('@/views/Board/Index').default
             },
