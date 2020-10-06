@@ -15,7 +15,7 @@ import EventBus from './utils/EventBus'
 if (!process.env.IS_WEB) Vue.use(require('vue-electron'))
 Vue.http = Vue.prototype.$http = axios
 Vue.config.productionTip = false
-
+// 테스트
 Vue.prototype.$crypto = crypto
 Vue.prototype.$common = common
 Vue.prototype.$db = {
